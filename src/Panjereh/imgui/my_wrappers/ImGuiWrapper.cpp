@@ -1,7 +1,5 @@
 #include "ImGuiWrapper.h"
-#include <memory>
 #include <stdio.h>
-
 #define GL_SILENCE_DEPRECATION
 
 #if defined(IMGUI_IMPL_OPENGL_ES2)
@@ -17,17 +15,19 @@ static void glfw_error_callback(int error, const char* description) {
     fprintf(stderr, "GLFW Error %d: %s\n", error, description);
 }
 
-ImGuiWrapper::ImGuiWrapper(int width, int height, const std::string& title)
-    : window(nullptr), window_width(width), window_height(height), window_title(title),
-    clear_color(ImVec4(0.45f, 0.55f, 0.60f, 1.00f)), main_scale(1.0f) {
+ImGuiWrapper::ImGuiWrapper(const WindowConfig& config, const MonitorInfo& monitorInfo)
+    : window(nullptr), config(config), monitorInfo(monitorInfo),
+    clear_color(ImVec4(0.45f, 0.55f, 0.60f, 1.00f)) {
     glfwSetErrorCallback(glfw_error_callback);
+    main_scale = monitorInfo.ContentScale;
 }
+
 
 ImGuiWrapper::~ImGuiWrapper() {
-    cleanup();
+    Cleanup();
 }
 
-bool ImGuiWrapper::initialize() {
+bool ImGuiWrapper::Initialize() {
     if (!glfwInit()) {
         return false;
     }
@@ -55,15 +55,28 @@ bool ImGuiWrapper::initialize() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 #endif
 
-    // Get content scale for DPI awareness
-    main_scale = ImGui_ImplGlfw_GetContentScaleForMonitor(glfwGetPrimaryMonitor());
-
     // Create window
-    window = glfwCreateWindow(
-        static_cast<int>(window_width * main_scale),
-        static_cast<int>(window_height * main_scale),
-        window_title.c_str(), nullptr, nullptr
-    );
+    if (config.FullScreen) {
+        window = glfwCreateWindow(
+            config.Width,
+            config.Height,
+            config.Title.c_str(),
+            glfwGetPrimaryMonitor(),
+            nullptr
+        );
+    }
+    else {
+        window = glfwCreateWindow(
+            static_cast<int>(config.Width * main_scale),
+            static_cast<int>(config.Height * main_scale),
+            config.Title.c_str(),
+            nullptr,
+            nullptr
+        );
+
+        // Center window if not fullscreen
+        FrameUtility::CenterWindowOnMonitor(window, monitorInfo);
+    }
 
     if (window == nullptr) {
         glfwTerminate();
@@ -71,13 +84,79 @@ bool ImGuiWrapper::initialize() {
     }
 
     glfwMakeContextCurrent(window);
-    glfwSwapInterval(1); // Enable vsync
+    glfwSwapInterval(config.VSync ? 1 : 0);
 
-    setupImGui();
+    SetupImGui();
     return true;
 }
 
-void ImGuiWrapper::setupImGui() {
+void ImGuiWrapper::Run() {
+    while (!ShouldClose()) {
+        BeginFrame();
+        EndFrame();
+        Render();
+    }
+}
+
+bool ImGuiWrapper::ShouldClose() const {
+    return glfwWindowShouldClose(window);
+}
+
+void ImGuiWrapper::BeginFrame() {
+    glfwPollEvents();
+
+    if (glfwGetWindowAttrib(window, GLFW_ICONIFIED) != 0) {
+        ImGui_ImplGlfw_Sleep(10);
+        return;
+    }
+
+    // Start the Dear ImGui frame
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+}
+
+void ImGuiWrapper::EndFrame() {
+    ImGui::EndFrame();
+}
+
+void ImGuiWrapper::Render() {
+    ImGui::Render();
+
+    int display_w, display_h;
+    glfwGetFramebufferSize(window, &display_w, &display_h);
+    glViewport(0, 0, display_w, display_h);
+    glClearColor(
+        clear_color.x * clear_color.w,
+        clear_color.y * clear_color.w,
+        clear_color.z * clear_color.w,
+        clear_color.w
+    );
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+    // Update and Render additional Platform Windows
+    ImGuiIO& io = ImGui::GetIO();
+    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+        GLFWwindow* backup_current_context = glfwGetCurrentContext();
+        ImGui::UpdatePlatformWindows();
+        ImGui::RenderPlatformWindowsDefault();
+        glfwMakeContextCurrent(backup_current_context);
+    }
+
+    glfwSwapBuffers(window);
+}
+
+void ImGuiWrapper::ToggleFullScreen() {
+    FrameUtility::ToggleFullScreen(window, config, monitorInfo);
+}
+
+bool ImGuiWrapper::IsFullScreen() const {
+    return config.FullScreen;
+}
+
+void ImGuiWrapper::SetupImGui() {
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -111,78 +190,19 @@ void ImGuiWrapper::setupImGui() {
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init(glsl_version.c_str());
 
-    loadFonts();
+    LoadFonts();
 }
 
-void ImGuiWrapper::loadFonts() {
+void ImGuiWrapper::LoadFonts() {
     ImGuiIO& io = ImGui::GetIO();
     io.Fonts->AddFontDefault();
 
-    // Note: You might want to make font loading configurable
-    // io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\segoeui.ttf", 16.0f * main_scale);
-    // io.Fonts->AddFontFromFileTTF("imgui/misc/fonts/Roboto-Medium.ttf", 16.0f * main_scale);
+    // Optional: Add custom fonts
+    // io.Fonts->AddFontFromFileTTF("fonts/Roboto-Medium.ttf", 16.0f * main_scale);
+    // io.Fonts->AddFontFromFileTTF("fonts/Cousine-Regular.ttf", 15.0f * main_scale);
 }
 
-void ImGuiWrapper::run() {
-    while (!shouldClose()) {
-        beginFrame();
-        // Your application logic goes here (to be implemented by user)
-        endFrame();
-        render();
-    }
-}
-
-bool ImGuiWrapper::shouldClose() const {
-    return glfwWindowShouldClose(window);
-}
-
-void ImGuiWrapper::beginFrame() {
-    glfwPollEvents();
-
-    if (glfwGetWindowAttrib(window, GLFW_ICONIFIED) != 0) {
-        ImGui_ImplGlfw_Sleep(10);
-        return;
-    }
-
-    // Start the Dear ImGui frame
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplGlfw_NewFrame();
-    ImGui::NewFrame();
-}
-
-void ImGuiWrapper::endFrame() {
-    ImGui::EndFrame();
-}
-
-void ImGuiWrapper::render() {
-    ImGui::Render();
-
-    int display_w, display_h;
-    glfwGetFramebufferSize(window, &display_w, &display_h);
-    glViewport(0, 0, display_w, display_h);
-    glClearColor(
-        clear_color.x * clear_color.w,
-        clear_color.y * clear_color.w,
-        clear_color.z * clear_color.w,
-        clear_color.w
-    );
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-    // Update and Render additional Platform Windows
-    ImGuiIO& io = ImGui::GetIO();
-    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
-        GLFWwindow* backup_current_context = glfwGetCurrentContext();
-        ImGui::UpdatePlatformWindows();
-        ImGui::RenderPlatformWindowsDefault();
-        glfwMakeContextCurrent(backup_current_context);
-    }
-
-    glfwSwapBuffers(window);
-}
-
-void ImGuiWrapper::cleanup() {
+void ImGuiWrapper::Cleanup() {
     if (window) {
         ImGui_ImplOpenGL3_Shutdown();
         ImGui_ImplGlfw_Shutdown();
@@ -193,22 +213,22 @@ void ImGuiWrapper::cleanup() {
     }
 }
 
-float ImGuiWrapper::getFramerate() const { return ImGui::GetIO().Framerate; }
 
 void ImGuiWrapper::ShowSimpleExampleWindow() {
     static float f = 0.0f;
     static int counter = 0;
+    ImGuiIO& io = GetIO();
 
     ImGui::Begin("Hello, world!");
     ImGui::Text("This is some useful text.");
     ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
-    ImGui::ColorEdit3("clear color", (float*)&getClearColor());
+    ImGui::ColorEdit3("clear color", (float*)&clear_color);
 
     if (ImGui::Button("Button"))
         counter++;
 
     ImGui::SameLine();
     ImGui::Text("counter = %d", counter);
-    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / getFramerate(), getFramerate());
+    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
     ImGui::End();
 }

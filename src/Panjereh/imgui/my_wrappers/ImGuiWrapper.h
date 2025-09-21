@@ -1,50 +1,56 @@
 #pragma once
+#include <memory>
+#include <string>
+#include <cstdint>
+#include <GLFW/glfw3.h>
 
 #include "../imgui.h"
 #include "../backends/imgui_impl_glfw.h"
 #include "../backends/imgui_impl_opengl3.h"
-#include <GLFW/glfw3.h>
-#include <memory>
-#include <string>
+#include "../../Utilities/FrameUtility.h"
 
 class ImGuiWrapper {
 public:
-    ImGuiWrapper(int width = 1280, int height = 800, const std::string& title = "Dear ImGui Application");
+    // Constructor takes WindowConfig and optional MonitorInfo
+    ImGuiWrapper(const WindowConfig& config,
+        const MonitorInfo& monitorInfo = FrameUtility::GetPrimaryMonitorInfo());
+
     ~ImGuiWrapper();
 
     // Delete copy constructor and assignment operator
     ImGuiWrapper(const ImGuiWrapper&) = delete;
     ImGuiWrapper& operator=(const ImGuiWrapper&) = delete;
 
-    bool initialize();
-    void run();
-    bool shouldClose() const;
-    void beginFrame();
-    void endFrame();
-    void render();
+    bool Initialize();
+    void Run();
+    bool ShouldClose() const;
+    void BeginFrame();
+    void EndFrame();
+    void Render();
 
+    // Fullscreen control
+    void ToggleFullScreen();
+    bool IsFullScreen() const;
 
-    // example
+    // show example 
     void ShowSimpleExampleWindow();
-    
-    
-    // Public access to commonly used objects 
-    float getFramerate() const;
-    GLFWwindow* getWindow() const { return window; }
-    ImGuiIO& getIO() { return ImGui::GetIO(); } // Return reference, not pointer
-    ImVec4& getClearColor() { return clear_color; }
+
+    // Public access
+    GLFWwindow* GetWindow() const { return window; }
+    ImGuiIO& GetIO() { return ImGui::GetIO(); }
+    ImVec4& GetClearColor() { return clear_color; }
+    const WindowConfig& GetConfig() const { return config; }
+    const MonitorInfo& GetMonitorInfo() const { return monitorInfo; }
 
 private:
-    void setupImGui();
-    void loadFonts();
-    void cleanup();
+    void SetupImGui();
+    void LoadFonts();
+    void Cleanup();
 
     GLFWwindow* window;
     std::string glsl_version;
     ImVec4 clear_color;
-    int window_width;
-    int window_height;
-    std::string window_title;
+    WindowConfig config;
+    MonitorInfo monitorInfo;
     float main_scale;
 };
-
