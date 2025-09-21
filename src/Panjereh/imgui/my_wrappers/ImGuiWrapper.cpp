@@ -121,31 +121,35 @@ void ImGuiWrapper::EndFrame() {
 }
 
 void ImGuiWrapper::Render() {
+    // First: Do any OpenGL rendering
+    PreRender();
+    
+    // Second: Render ImGui on top
     ImGui::Render();
 
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    
+    // Third: Finish rendering
+    GLFWwindow* backup_current_context = glfwGetCurrentContext();
+    ImGui::UpdatePlatformWindows();
+    ImGui::RenderPlatformWindowsDefault();
+    glfwMakeContextCurrent(backup_current_context);
+    
+    glfwSwapBuffers(window);
+}
+
+void ImGuiWrapper::PreRender() {
+    // Clear the screen and set up for OpenGL drawing
     int display_w, display_h;
     glfwGetFramebufferSize(window, &display_w, &display_h);
     glViewport(0, 0, display_w, display_h);
-    glClearColor(
-        clear_color.x * clear_color.w,
-        clear_color.y * clear_color.w,
-        clear_color.z * clear_color.w,
-        clear_color.w
-    );
-    glClear(GL_COLOR_BUFFER_BIT);
 
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-    // Update and Render additional Platform Windows
-    ImGuiIO& io = ImGui::GetIO();
-    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
-        GLFWwindow* backup_current_context = glfwGetCurrentContext();
-        ImGui::UpdatePlatformWindows();
-        ImGui::RenderPlatformWindowsDefault();
-        glfwMakeContextCurrent(backup_current_context);
-    }
-
-    glfwSwapBuffers(window);
+    // Set up simple 2D orthographic projection
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(-1, 1, -1, 1, -1, 1); // Simple coordinate system: -1 to 1
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
 }
 
 void ImGuiWrapper::ToggleFullScreen() {

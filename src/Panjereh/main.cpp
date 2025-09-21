@@ -1,5 +1,6 @@
 ﻿#include <memory>
 #include "imgui/my_wrappers/ImGuiWrapper.h"
+#include "OpenGLs/SimpleOpenGLRenderer.h"
 #include "Utilities/FrameUtility.h"
 #include <stdexcept>
 
@@ -46,13 +47,39 @@ int main() {
 
 	// Main loop
 	while (!imguiApp.ShouldClose()) {
+
 		imguiApp.BeginFrame();
 		// ------------------------------------------------
 
-
+		// Your ImGui UI code here
+		ImGui::Begin("OpenGL Controls");
+		if (ImGui::Button("Red Background")) {
+			// This will be drawn in the Render() call
+		}
+		if (ImGui::Button("Blue Square")) {
+			// This will be drawn in the Render() call
+		}
+		ImGui::End();
 
 		// ------------------------------------------------
 		imguiApp.EndFrame();
+
+		// Do OpenGL rendering right before ImGui renders
+		//int display_w, display_h;
+		//glfwGetFramebufferSize(imguiApp.GetWindow(), &display_w, &display_h);
+		//glViewport(0, 0, display_w, display_h);
+
+		//// Set up simple coordinates (-1 to 1)
+		//glMatrixMode(GL_PROJECTION);
+		//glLoadIdentity();
+		//glOrtho(-1, 1, -1, 1, -1, 1);
+		//glMatrixMode(GL_MODELVIEW);
+		//glLoadIdentity();
+
+		// Add OpenGL drawing before ImGui rendering
+		SimpleOpenGLRenderer::DrawRedBackground(); // Or any other drawing function
+		SimpleOpenGLRenderer::DrawBlueSquare();
+
 		imguiApp.Render();
 	}
 

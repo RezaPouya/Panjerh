@@ -27,6 +27,7 @@ public:
     void BeginFrame();
     void EndFrame();
     void Render();
+    void PreRender(); // Add this method
 
     // Fullscreen control
     void ToggleFullScreen();

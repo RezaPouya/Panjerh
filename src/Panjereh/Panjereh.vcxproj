@@ -172,6 +172,7 @@
     <ClCompile Include="imgui\misc\freetype\imgui_freetype.cpp" />
     <ClCompile Include="imgui\my_wrappers\ImGuiWrapper.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="OpenGLs\SimpleOpenGLRenderer.cpp" />
     <ClCompile Include="Utilities\FrameUtility.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -188,6 +189,7 @@
     <ClInclude Include="imgui\misc\cpp\imgui_stdlib.h" />
     <ClInclude Include="imgui\misc\freetype\imgui_freetype.h" />
     <ClInclude Include="imgui\misc\single_file\imgui_single_file.h" />
+    <ClInclude Include="OpenGLs\SimpleOpenGLRenderer.h" />
     <ClInclude Include="Panjereh.h" />
     <ClInclude Include="Utilities\FrameUtility.h" />
   </ItemGroup>
