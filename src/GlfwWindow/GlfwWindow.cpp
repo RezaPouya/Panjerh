@@ -1,11 +1,12 @@
+#pragma once
 #include <iostream>
 #include <stdexcept> // For std::runtime_error
-#include <GL/glew.h>
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 #include <glad/gl.h>
-#include <stdlib.h>
-#include <stdio.h>
+//#include <GL/glew.h> // we can not use both glad and glew together 
+#include <cstdlib>
+#include <cstdio>
 #include <glm/vec3.hpp> // glm::vec3
 #include <glm/vec4.hpp> // glm::vec4
 #include <glm/mat4x4.hpp> // glm::mat4
@@ -32,6 +33,7 @@ int main()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // Use Core Profile
+	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
 
 	GLFWwindow* window = glfwCreateWindow(1024, 760, "Hello world", nullptr, nullptr);
 	
@@ -52,6 +54,9 @@ int main()
 
 	glfwSetKeyCallback(window, key_callback);
 
+	// Print OpenGL version to verify it's working
+	std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
+
 	while (!glfwWindowShouldClose(window))
 	{
 		float ratio;
@@ -59,12 +64,14 @@ int main()
 		glfwGetFramebufferSize(window, &width, &height);
 		ratio = width / (float)height;
 
+		// Set the viewport each frame in case window was resized
+		glViewport(0, 0, width, height);
 		// ------------------------------------------------------------------------------- 
 
-		
+		glClearColor(1,0,0,1);
+		glClear(GL_COLOR_BUFFER_BIT); // Actually clear the buffer!
 
 		// -------------------------------------------------------------------------------
-
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
