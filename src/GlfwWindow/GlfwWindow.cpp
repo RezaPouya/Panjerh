@@ -7,6 +7,7 @@
 //#include <GL/glew.h> // we can not use both glad and glew together 
 #include <cstdlib>
 #include <cstdio>
+#include <vector>
 #include <glm/vec3.hpp> // glm::vec3
 #include <glm/vec4.hpp> // glm::vec4
 #include <glm/mat4x4.hpp> // glm::mat4
@@ -24,6 +25,8 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GLFW_TRUE);
 }
+
+static void DrawTriangle();
 
 int main()
 {
@@ -57,28 +60,69 @@ int main()
 	// Print OpenGL version to verify it's working
 	std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
 
+	///// SETUP CODE (Do this ONCE, before the loop) /////
+
+	GLfloat verts[] = {
+		 0.0f,  0.5f,  // Vertex 1: Top center
+		-0.5f, -0.5f,  // Vertex 2: Bottom left
+		 0.5f, -0.5f   // Vertex 3: Bottom right
+	};
+
+	GLuint VAO; // Vertex Array Object (REQUIRED for core profile)
+	GLuint VBO; // Vertex Buffer Object
+
+	// 1. Generate and bind VAO (THIS IS MANDATORY)
+	glGenVertexArrays(1, &VAO);
+	glBindVertexArray(VAO);
+
+	// 2. Generate and bind VBO
+	glGenBuffers(1, &VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO); // Fixed: GL_ARRAY_BUFFER, not GL_ARRAY_BUFFER_BINDING
+
+	// 3. Copy vertex data to buffer
+	glBufferData(GL_ARRAY_BUFFER, sizeof(verts), verts, GL_STATIC_DRAW);
+
+	// 4. Set vertex attribute pointers
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+
+	// 5. Unbind VAO (optional but good practice)
+	glBindVertexArray(0);
+
 	while (!glfwWindowShouldClose(window))
 	{
-		float ratio;
 		int width, height;
 		glfwGetFramebufferSize(window, &width, &height);
-		ratio = width / (float)height;
 
-		// Set the viewport each frame in case window was resized
+		// Clear the screen
+		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		// Set viewport
 		glViewport(0, 0, width, height);
-		// ------------------------------------------------------------------------------- 
 
-		glClearColor(1,0,0,1);
-		glClear(GL_COLOR_BUFFER_BIT); // Actually clear the buffer!
+		///// RENDER CODE (Do this every frame) /////
 
-		// -------------------------------------------------------------------------------
+		// 6. Bind the VAO (this remembers all the VBO and attribute settings)
+		glBindVertexArray(VAO);
+
+		// 7. Draw the triangle
+		glDrawArrays(GL_TRIANGLES, 0, 3);
+
+		// 8. Unbind VAO (optional)
+		glBindVertexArray(0);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
 
-
+	glDeleteVertexArrays(1, &VAO);
+	glDeleteBuffers(1, &VBO);
 	glfwTerminate();
 }
 
 
+static void DrawTriangle() {
+
+
+}
