@@ -76,6 +76,7 @@ int main()
 	// Generate 1 VAO, store its ID in VAO ( take 1 vao id from pool and make it 'in use')
 	glGenVertexArrays(1, &VAO);  
 	glBindVertexArray(VAO); //  // Now the VAO is actually created and bound
+	// NOTE : At this point: The VAO is created and bound, meaning it's ready to "record" any vertex attribute configuration you set up.
 
 	// 2. Generate and bind VBO
 	GLuint VBO; // Vertex Buffer Object
@@ -103,7 +104,7 @@ int main()
 	glEnableVertexAttribArray(1);
 
 	// 5. Unbind VAO (optional but good practice)
-	//glBindVertexArray(0);
+	glBindVertexArray(0);
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -120,7 +121,7 @@ int main()
 		///// RENDER CODE (Do this every frame) /////
 
 		// 6. Bind the VAO (this remembers all the VBO and attribute settings)
-		glBindVertexArray(VAO);
+		glBindVertexArray(VAO); // Bind the VAO (this remembers all the VBO and attribute settings)
 
 		// 7. Draw the triangle
 		glDrawArrays(GL_TRIANGLES, 0, 3);
