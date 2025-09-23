@@ -26,9 +26,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 		glfwSetWindowShouldClose(window, GLFW_TRUE);
 }
 
-static void DrawTriangle();
-
-int main()
+int main222()
 {
 	if (!glfwInit())
 		throw std::runtime_error("Failed to initialize GLFW");

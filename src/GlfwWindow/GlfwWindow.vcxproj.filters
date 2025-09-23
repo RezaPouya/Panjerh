@@ -3,5 +3,9 @@
   <ItemGroup>
     <ClCompile Include="GlfwWindow.cpp" />
     <ClCompile Include="src\gl.c" />
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="main.h" />
   </ItemGroup>
 </Project>
