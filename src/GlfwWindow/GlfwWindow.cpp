@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <iostream>
 #include <stdexcept> // For std::runtime_error
 #define GLFW_INCLUDE_NONE
@@ -60,34 +60,50 @@ int main()
 	// Print OpenGL version to verify it's working
 	std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
 
-	///// SETUP CODE (Do this ONCE, before the loop) /////
-
+	// Define Your Vertex Data (CPU-side) 
 	GLfloat verts[] = {
-		 0.0f,  0.5f,  // Vertex 1: Top center
-		-0.5f, -0.5f,  // Vertex 2: Bottom left
-		 0.5f, -0.5f   // Vertex 3: Bottom right
+		// positions         // colors
+		 -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom-left (red)
+		  0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, // bottom-right (green)
+		  0.0f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f  // top (blue)
 	};
 
-	GLuint VAO; // Vertex Array Object (REQUIRED for core profile)
-	GLuint VBO; // Vertex Buffer Object
-
 	// 1. Generate and bind VAO (THIS IS MANDATORY)
-	glGenVertexArrays(1, &VAO);
-	glBindVertexArray(VAO);
+	// VAOs store the state of vertex attribute configuration.
+	GLuint VAO; // Vertex Array Object (REQUIRED for core profile)
+
+	//  The 1 means "please generate one VAO for me"
+	// Generate 1 VAO, store its ID in VAO ( take 1 vao id from pool and make it 'in use')
+	glGenVertexArrays(1, &VAO);  
+	glBindVertexArray(VAO); //  // Now the VAO is actually created and bound
 
 	// 2. Generate and bind VBO
-	glGenBuffers(1, &VBO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO); // Fixed: GL_ARRAY_BUFFER, not GL_ARRAY_BUFFER_BINDING
+	GLuint VBO; // Vertex Buffer Object
+	glGenBuffers(1, &VBO); // glGenBuffers(n, &id) :: generate n buffer ids ( takes from pool and make the 'in use' _
 
-	// 3. Copy vertex data to buffer
-	glBufferData(GL_ARRAY_BUFFER, sizeof(verts), verts, GL_STATIC_DRAW);
+	// Binding makes this VBO the "active" buffer - all subsequent buffer operations will affect it.
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);  // glBindBuffer(target, id) :: Make buffer id active for target
+
+	// 3. Copy vertex data to buffer ( GPU )
+	// This copies our vertices data from CPU RAM to GPU memory.
+	// parameter is a hint to OpenGL about how we'll use the data:
+	//		GL_STATIC_DRAW: Data will not change(most common)
+	//		GL_DYNAMIC_DRAW : Data may change occasionally
+	//		GL_STREAM_DRAW : Data will change every frame
+	glBufferData(GL_ARRAY_BUFFER, sizeof(verts), verts, GL_STATIC_DRAW); // Allocate memory and copy data
+
+	// glBufferSubData(target, offset, size, data)	Update part of an existing buffer
 
 	// 4. Set vertex attribute pointers
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
+	// Color attribute (attribute index 1)  
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+
 	// 5. Unbind VAO (optional but good practice)
-	glBindVertexArray(0);
+	//glBindVertexArray(0);
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -121,8 +137,3 @@ int main()
 	glfwTerminate();
 }
 
-
-static void DrawTriangle() {
-
-
-}
