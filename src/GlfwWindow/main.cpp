@@ -191,7 +191,6 @@ GLuint CreateShaderProgram(GLuint& vertexShader, GLuint& fragmentShader) {
 	else {
 		std::cout << "Shader program linked successfully!" << std::endl;
 
-		// Debug: Check attribute locations
 		GLint posAttrib = glGetAttribLocation(shaderProgram, "aPos");
 		GLint colorAttrib = glGetAttribLocation(shaderProgram, "aColor");
 		std::cout << "aPos location: " << posAttrib << ", aColor location: " << colorAttrib << std::endl;
