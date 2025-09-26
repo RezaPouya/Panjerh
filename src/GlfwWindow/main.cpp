@@ -9,22 +9,6 @@
 #include <vector>
 #include "utils/GlfwHelper.h"
 
-static void error_callback(int error, const char* description)
-{
-	fprintf(stderr, "Error: %s\n", description);
-}
-
-static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, GLFW_TRUE);
-}
-
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
-	glViewport(0, 0, width, height);
-}
-
 GLuint CreateVertexShader();
 GLuint CreateFragmentShader();
 GLuint CreateShaderProgram(GLuint& vertexShader, GLuint& fragmentShader);
@@ -51,30 +35,50 @@ int main()
 		glGenVertexArrays(1, &VAO);
 		glBindVertexArray(VAO);
 
-		GLuint VBO;
-		glGenBuffers(1, &VBO);
-
 		GLfloat verts[] = {
-			-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,  // pos(x,y,z) + color(r,g,b) // bottom-left (red)
-			0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,  // pos(x,y,z) + color(r,g,b) // bottom-right (green)
-			0.0f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f   // pos(x,y,z) + color(r,g,b) // top (blue)
+			-0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,  // pos(x,y,z) + color(r,g,b) // bottom-left (red)
+			0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,  // pos(x,y,z) + color(r,g,b) // bottom-right (green)
+			0.0f,  0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   // pos(x,y,z) + color(r,g,b) // top (blue)
+
+			// second triangle
+			0.5f, 0.0f, 0.0f,  1.0f, 1.0f, 1.0f, // bottom right
+			-0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 1.0f, // bottom left
+			-0.5f,  0.5f, 0.0f,  1.0f, 1.0f, 1.0f, // top left
 		};
 
 		//Memory: [-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, ...]
 		//			↑					↑
 		//			Position			Color
 
+
 		// SET UP BUFFER AND ATTRIBUTES ONCE (not every frame)
+		GLuint VBO;
+		glGenBuffers(1, &VBO);
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(verts), verts, GL_STATIC_DRAW);
 
 		if (posAttrib != -1 && colorAttrib != -1) {
 			//  OpenGL interprets it based on your glVertexAttribPointer configuration:
+			// This means we have to specify how OpenGL should interpret the vertex data before rendering. 
 			glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+			// 6 * sizeof(float) : The fifth argument is known as the stride and tells us the space between consecutive vertex attributes
+			// stride : just show how much these data belong to one vertext !!! 
+			// (void*)0 : This is the offset of where the position data begins in the buffer.
+
 			glVertexAttribPointer(colorAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 
 			glEnableVertexAttribArray(posAttrib);
 			glEnableVertexAttribArray(colorAttrib);
+
+
+			//  OpenGL interprets it based on your glVertexAttribPointer configuration:
+			// This means we have to specify how OpenGL should interpret the vertex data before rendering. 
+			glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(6 * sizeof(float)));
+			// 6 * sizeof(float) : The fifth argument is known as the stride and tells us the space between consecutive vertex attributes
+			// stride : just show how much these data belong to one vertext !!! 
+			// (void*)0 : This is the offset of where the position data begins in the buffer.
+
+			glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(9 * sizeof(float)));
 		}
 		else {
 			std::cout << "Warning: Could not find attributes" << std::endl;
@@ -89,7 +93,7 @@ int main()
 
 			glBindVertexArray(VAO); // This automatically sets up all the vertex attributes
 
-			glDrawArrays(GL_TRIANGLES, 0, 3); // Only one draw call needed
+			glDrawArrays(GL_TRIANGLES, 0, 12); // Only one draw call needed
 
 			glBindVertexArray(0);
 

@@ -158,7 +158,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="utils\GlfwHelper.cpp" />
-    <ClCompile Include="description.txt" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\gl.c" />
   </ItemGroup>
