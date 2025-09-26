@@ -60,25 +60,22 @@ int main()
 		if (posAttrib != -1 && colorAttrib != -1) {
 			//  OpenGL interprets it based on your glVertexAttribPointer configuration:
 			// This means we have to specify how OpenGL should interpret the vertex data before rendering. 
-			glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 			// 6 * sizeof(float) : The fifth argument is known as the stride and tells us the space between consecutive vertex attributes
 			// stride : just show how much these data belong to one vertext !!! 
 			// (void*)0 : This is the offset of where the position data begins in the buffer.
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 
-			glVertexAttribPointer(colorAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-
-			glEnableVertexAttribArray(posAttrib);
-			glEnableVertexAttribArray(colorAttrib);
+			glEnableVertexAttribArray(0);
+			glEnableVertexAttribArray(1);
 
 
-			//  OpenGL interprets it based on your glVertexAttribPointer configuration:
-			// This means we have to specify how OpenGL should interpret the vertex data before rendering. 
 			glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(6 * sizeof(float)));
-			// 6 * sizeof(float) : The fifth argument is known as the stride and tells us the space between consecutive vertex attributes
-			// stride : just show how much these data belong to one vertext !!! 
-			// (void*)0 : This is the offset of where the position data begins in the buffer.
-
 			glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(9 * sizeof(float)));
+
+			glEnableVertexAttribArray(2);
+			glEnableVertexAttribArray(3);
+
 		}
 		else {
 			std::cout << "Warning: Could not find attributes" << std::endl;
