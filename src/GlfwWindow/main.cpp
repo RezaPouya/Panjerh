@@ -84,13 +84,69 @@ int main()
 		// Unbind VAO to prevent accidental modifications
 		glBindVertexArray(0);
 
-		glfwHelper.RenderLoop([&shaderProgram, &VAO]() {
+#pragma region ebo example
+
+		// راس‌های مستطیل با EBO
+		float rectangleVertices[] = {
+			0.1f,  0.6f, 0.0f,   1.0f, 0.0f, 0.0f,  // راس 0: قرمز
+			0.3f,  0.6f, 0.0f,   0.0f, 1.0f, 0.0f,  // راس 1: سبز
+			0.1f,  0.8f, 0.0f,   0.0f, 0.0f, 1.0f,  // راس 2: آبی
+			0.3f,  0.8f, 0.0f,   1.0f, 1.0f, 0.0f   // راس 3: زرد
+		};
+
+		unsigned int indices[] = {
+			0, 1, 2,   // مثلث اول
+			1, 2, 3    // مثلث دوم
+		};
+
+		// VAO جداگانه برای مستطیل با EBO
+		GLuint rectangleVAO;
+		glGenVertexArrays(1, &rectangleVAO);
+		glBindVertexArray(rectangleVAO);
+
+		GLuint EBO;
+		glGenBuffers(1, &EBO);
+
+		// برای EBO نیاز به VBO جداگانه داریم
+		GLuint rectangleVBO;
+		glGenBuffers(1, &rectangleVBO);
+
+		// ابتدا VBO را تنظیم کنید
+		glBindBuffer(GL_ARRAY_BUFFER, rectangleVBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(rectangleVertices), rectangleVertices, GL_STATIC_DRAW);
+
+		// سپس EBO را تنظیم کنید
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+		// تنظیمات attribute برای مستطیل (از locationهای 0 و 1 استفاده کنید)
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(0);
+		glEnableVertexAttribArray(1);
+
+		// ❌ اینجا رسم نکنید! این کار باید در RenderLoop باشد
+		// glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+#pragma endregion
+
+
+
+		// Unbind VAO to prevent accidental modifications
+		glBindVertexArray(0);
+
+		glfwHelper.RenderLoop([&shaderProgram, &VAO , &rectangleVAO]() {
 
 			glUseProgram(shaderProgram);
 
 			glBindVertexArray(VAO); // This automatically sets up all the vertex attributes
 
 			glDrawArrays(GL_TRIANGLES, 0, 12); // Only one draw call needed
+
+			// رسم مستطیل با EBO
+// رسم مستطیل با EBO
+			glBindVertexArray(rectangleVAO);
+			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 			glBindVertexArray(0);
 
