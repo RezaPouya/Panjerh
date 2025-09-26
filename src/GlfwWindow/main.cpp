@@ -125,8 +125,6 @@ int main()
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
 
-		// ❌ اینجا رسم نکنید! این کار باید در RenderLoop باشد
-		// glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 #pragma endregion
 

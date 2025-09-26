@@ -157,11 +157,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Shader.cpp" />
     <ClCompile Include="utils\GlfwHelper.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\gl.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Shader.h" />
     <ClInclude Include="utils\GlfwHelper.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
