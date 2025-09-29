@@ -157,6 +157,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="shaders\FragmentShader.cpp" />
     <ClCompile Include="utils\Shader.cpp" />
     <ClCompile Include="utils\GlfwHelper.cpp" />
     <ClCompile Include="main.cpp" />

@@ -5,6 +5,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="utils\GlfwHelper.cpp" />
     <ClCompile Include="utils\Shader.cpp" />
+    <ClCompile Include="shaders\FragmentShader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="utils\GlfwHelper.h" />
