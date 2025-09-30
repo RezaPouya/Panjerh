@@ -158,10 +158,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="t_1_main.cpp" />
     <ClCompile Include="shaders\BasicShaders.cpp" />
     <ClCompile Include="utils\Shader.cpp" />
     <ClCompile Include="utils\GlfwHelper.cpp" />
-    <ClCompile Include="main_learn.cpp" />
+    <ClCompile Include="t_-10_main_learn.cpp" />
     <ClCompile Include="src\gl.c" />
   </ItemGroup>
   <ItemGroup>

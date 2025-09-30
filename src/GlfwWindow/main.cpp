@@ -14,63 +14,56 @@ int main() {
 	GlfwHelper glfwHelper("Initial Win");
 
 	try {
-		/*GLfloat vertecies[] = {
-			-0.5f , 0.5f * GLfloat(sqrt(3)) / 3 , 0.0f ,
-			0.5f , -0.5f * GLfloat(sqrt(3)) / 3 , 0.0f ,
-			0.0f ,  -0.5f * GLfloat(sqrt(3)) * 2 / 3 , 0.0f ,
-		};*/
-
 		std::vector<GLfloat> vertices = {
-			-0.5f, -0.5f * GLfloat(sqrt(3)) / 3, 0.0f, // every component have 3 object 
-			0.5f, -0.5f * GLfloat(sqrt(3)) / 3,  0.0f,
-			0.0f, 0.5f * GLfloat(sqrt(3)) * 2 / 3, 0.0f,
+			-0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f, // Lower left corner
+			0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,  // Lower right corner
+			0.0f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f, // Upper corner
+			-0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f, // Inner left
+			0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f,  // Inner right
+			0.0f, -0.5f * float(sqrt(3)) / 3, 0.0f     // Inner down
 		};
 
-		// all open gl objects are accessed by references ( by value )
+		std::vector<GLuint> indicies = {
+			 0, 3, 5, // lower left 
+			 3, 2, 4, // lower right 
+			 5, 4, 1 // top 
+		};
 
 		auto shaderProgram = BasicShaders::CreateShaderProgram(BasicShaders::VertexShaderSource(), BasicShaders::FragmentShaderSource());
 
-		// Binding in openGL :
-		//		we make certain object the current object 
-		//		and whenever we call a function that modify that type of object , its current object of that type ( binded object ) 
-		//		
+		GLuint VAO, VBO, EBO;
+		glGenVertexArrays(1, &VAO);
 
-		GLuint vertextArrayObject; // VAO : keep structure and tell openGl how to intecept raw data from VBO  
-		// NOTE : VAO should be created before VBO , the ordering is important 
-		// from the momeny it created , it start to capture structure of data ( automatically ) 
-		glGenVertexArrays(1, &vertextArrayObject);
-		glBindVertexArray(vertextArrayObject);
+		glGenBuffers(1, &VBO);
+		glGenBuffers(1, &EBO);
+		glBindVertexArray(VAO);
 
-		GLuint vertexBufferObject;  // VAO : keep raw data in buffer for sending to gpu ( its block of raw memory data ) 
-		glGenBuffers(1, &vertexBufferObject);
-		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
-		GLsizeiptr verteciesSize = vertices.size() * sizeof(GLfloat);
-		glBufferData(GL_ARRAY_BUFFER, verteciesSize , vertices.data(), GL_STATIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(GLfloat), vertices.data(), GL_STATIC_DRAW);
 
-		// now we want to configure VAO ( specifiy how open gl should interpert VBO ) 
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicies.size() * sizeof(GLint), indicies.data(), GL_STATIC_DRAW);
 
-		GLsizei stride = 3 * sizeof(GLfloat); // the amount of data between eachvertecies ! 
-		auto offset = (void*)0;  // the pointer to where our vertecies start in array  
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, offset);
-		glEnableVertexAttribArray(0); // for being able to use it 
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat) /*stride*/, (void*)0 /*offset*/);
+		glEnableVertexAttribArray(0);
 
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // it should be unbind after vao , because ebo is stored in VAO 
 
-		// optional : to prevent from accidentally change the value of VBA and VBO
-		glBindBuffer(GL_ARRAY_BUFFER, 0); // for vbo 
-		glBindVertexArray(0); // ordering is important 
-
-
-		glfwHelper.RenderLoop([&shaderProgram , &vertextArrayObject]() {
+		glfwHelper.RenderLoop([&shaderProgram, &VAO]() {
 			glUseProgram(shaderProgram);
-			glBindVertexArray(vertextArrayObject);
-			glDrawArrays(GL_TRIANGLES, 0, 3);
+			glBindVertexArray(VAO);
+			//glDrawArrays(GL_TRIANGLES, 0, 3);
+			glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, (void*)0);
 		});
 
 
 		// Cleanup
-		glDeleteVertexArrays(1, &vertextArrayObject); 
+		glDeleteVertexArrays(1, &VAO);
+		glDeleteBuffers(1, &VBO);
+		glDeleteBuffers(1, &EBO);
 		glDeleteProgram(shaderProgram);
-		glDeleteBuffers(1, &vertexBufferObject);
 	}
 	catch (const std::exception& e) {
 		std::cout << "Error: " << e.what() << std::endl;
