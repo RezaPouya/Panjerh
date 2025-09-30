@@ -2,10 +2,11 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="src\gl.c" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="main_learn.cpp" />
     <ClCompile Include="utils\GlfwHelper.cpp" />
     <ClCompile Include="utils\Shader.cpp" />
-    <ClCompile Include="shaders\FragmentShader.cpp" />
+    <ClCompile Include="shaders\BasicShaders.cpp" />
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="utils\GlfwHelper.h" />

@@ -13,11 +13,12 @@
 class GlfwHelper
 {
 public:
-    GlfwHelper();
+    GlfwHelper(const char* title) ;
     ~GlfwHelper();
     void RenderLoop(const std::function<void()>& func);
 
 private:
+    const char* m_winTitle;
     GLFWwindow* glfwWindow = nullptr;
     static void error_callback(int error, const char* description);
     static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);

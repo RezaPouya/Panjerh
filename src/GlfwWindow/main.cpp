@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include <iostream>
 #include <stdexcept>
 #define GLFW_INCLUDE_NONE
@@ -8,155 +8,69 @@
 #include <cstdio>
 #include <vector>
 #include "utils/GlfwHelper.h"
+#include "shaders/BasicShaders.cpp"
 
-GLuint CreateVertexShader();
-GLuint CreateFragmentShader();
-GLuint CreateShaderProgram(GLuint& vertexShader, GLuint& fragmentShader);
+int main() {
+	GlfwHelper glfwHelper("Initial Win");
 
-int main()
-{
 	try {
-		GlfwHelper glfwHelper;
+		/*GLfloat vertecies[] = {
+			-0.5f , 0.5f * GLfloat(sqrt(3)) / 3 , 0.0f ,
+			0.5f , -0.5f * GLfloat(sqrt(3)) / 3 , 0.0f ,
+			0.0f ,  -0.5f * GLfloat(sqrt(3)) * 2 / 3 , 0.0f ,
+		};*/
 
-		// Create shaders first
-		GLuint vertexShader = CreateVertexShader();
-		GLuint fragmentShader = CreateFragmentShader();
-		GLuint shaderProgram = CreateShaderProgram(vertexShader, fragmentShader);
-
-		GLint posAttrib = glGetAttribLocation(shaderProgram, "aPos");
-		GLint colorAttrib = glGetAttribLocation(shaderProgram, "aColor"); // CHANGED: aColor instead of fragColor
-		std::cout << "Attribute location for 'aColor': " << colorAttrib << std::endl;
-
-		glEnable(GL_DEPTH_TEST);
-
-		// 1. Generate and bind VAO (THIS IS MANDATORY)
-		// VAOs store the state of vertex attribute configuration.
-		GLuint VAO; // Vertex Array Object (REQUIRED for core profile)
-		glGenVertexArrays(1, &VAO);
-		glBindVertexArray(VAO);
-
-		GLfloat verts[] = {
-			-0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,  // pos(x,y,z) + color(r,g,b) // bottom-left (red)
-			0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,  // pos(x,y,z) + color(r,g,b) // bottom-right (green)
-			0.0f,  0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   // pos(x,y,z) + color(r,g,b) // top (blue)
-
-			// second triangle
-			0.5f, 0.0f, 0.0f,  1.0f, 1.0f, 1.0f, // bottom right
-			-0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 1.0f, // bottom left
-			-0.5f,  0.5f, 0.0f,  1.0f, 1.0f, 1.0f, // top left
+		std::vector<GLfloat> vertices = {
+			-0.5f, -0.5f * GLfloat(sqrt(3)) / 3, 0.0f, // every component have 3 object 
+			0.5f, -0.5f * GLfloat(sqrt(3)) / 3,  0.0f,
+			0.0f, 0.5f * GLfloat(sqrt(3)) * 2 / 3, 0.0f,
 		};
 
-		//Memory: [-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, ...]
-		//			↑					↑
-		//			Position			Color
+		// all open gl objects are accessed by references ( by value )
+
+		auto shaderProgram = BasicShaders::CreateShaderProgram(BasicShaders::VertexShaderSource(), BasicShaders::FragmentShaderSource());
+
+		// Binding in openGL :
+		//		we make certain object the current object 
+		//		and whenever we call a function that modify that type of object , its current object of that type ( binded object ) 
+		//		
+
+		GLuint vertextArrayObject; // VAO : keep structure and tell openGl how to intecept raw data from VBO  
+		// NOTE : VAO should be created before VBO , the ordering is important 
+		// from the momeny it created , it start to capture structure of data ( automatically ) 
+		glGenVertexArrays(1, &vertextArrayObject);
+		glBindVertexArray(vertextArrayObject);
+
+		GLuint vertexBufferObject;  // VAO : keep raw data in buffer for sending to gpu ( its block of raw memory data ) 
+		glGenBuffers(1, &vertexBufferObject);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
+		GLsizeiptr verteciesSize = vertices.size() * sizeof(GLfloat);
+		glBufferData(GL_ARRAY_BUFFER, verteciesSize , vertices.data(), GL_STATIC_DRAW);
+
+		// now we want to configure VAO ( specifiy how open gl should interpert VBO ) 
+
+		GLsizei stride = 3 * sizeof(GLfloat); // the amount of data between eachvertecies ! 
+		auto offset = (void*)0;  // the pointer to where our vertecies start in array  
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, offset);
+		glEnableVertexAttribArray(0); // for being able to use it 
 
 
-		// SET UP BUFFER AND ATTRIBUTES ONCE (not every frame)
-		GLuint VBO;
-		glGenBuffers(1, &VBO);
-		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(verts), verts, GL_STATIC_DRAW);
-
-		if (posAttrib != -1 && colorAttrib != -1) {
-			//  OpenGL interprets it based on your glVertexAttribPointer configuration:
-			// This means we have to specify how OpenGL should interpret the vertex data before rendering. 
-			// 6 * sizeof(float) : The fifth argument is known as the stride and tells us the space between consecutive vertex attributes
-			// stride : just show how much these data belong to one vertext !!! 
-			// (void*)0 : This is the offset of where the position data begins in the buffer.
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-
-			glEnableVertexAttribArray(0);
-			glEnableVertexAttribArray(1);
+		// optional : to prevent from accidentally change the value of VBA and VBO
+		glBindBuffer(GL_ARRAY_BUFFER, 0); // for vbo 
+		glBindVertexArray(0); // ordering is important 
 
 
-			glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(6 * sizeof(float)));
-			glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(9 * sizeof(float)));
-
-			glEnableVertexAttribArray(2);
-			glEnableVertexAttribArray(3);
-
-		}
-		else {
-			std::cout << "Warning: Could not find attributes" << std::endl;
-		}
-
-		// Unbind VAO to prevent accidental modifications
-		glBindVertexArray(0);
-
-#pragma region ebo example
-
-		// راس‌های مستطیل با EBO
-		float rectangleVertices[] = {
-			0.1f,  0.6f, 0.0f,   1.0f, 0.0f, 0.0f,  // راس 0: قرمز
-			0.3f,  0.6f, 0.0f,   0.0f, 1.0f, 0.0f,  // راس 1: سبز
-			0.1f,  0.8f, 0.0f,   0.0f, 0.0f, 1.0f,  // راس 2: آبی
-			0.3f,  0.8f, 0.0f,   1.0f, 1.0f, 0.0f   // راس 3: زرد
-		};
-
-		unsigned int indices[] = {
-			0, 1, 2,   // مثلث اول
-			1, 2, 3    // مثلث دوم
-		};
-
-		// VAO جداگانه برای مستطیل با EBO
-		GLuint rectangleVAO;
-		glGenVertexArrays(1, &rectangleVAO);
-		glBindVertexArray(rectangleVAO);
-
-		GLuint EBO;
-		glGenBuffers(1, &EBO);
-
-		// برای EBO نیاز به VBO جداگانه داریم
-		GLuint rectangleVBO;
-		glGenBuffers(1, &rectangleVBO);
-
-		// ابتدا VBO را تنظیم کنید
-		glBindBuffer(GL_ARRAY_BUFFER, rectangleVBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(rectangleVertices), rectangleVertices, GL_STATIC_DRAW);
-
-		// سپس EBO را تنظیم کنید
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-		// تنظیمات attribute برای مستطیل (از locationهای 0 و 1 استفاده کنید)
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-		glEnableVertexAttribArray(0);
-		glEnableVertexAttribArray(1);
-
-
-#pragma endregion
-
-
-
-		// Unbind VAO to prevent accidental modifications
-		glBindVertexArray(0);
-
-		glfwHelper.RenderLoop([&shaderProgram, &VAO , &rectangleVAO]() {
-
+		glfwHelper.RenderLoop([&shaderProgram , &vertextArrayObject]() {
 			glUseProgram(shaderProgram);
+			glBindVertexArray(vertextArrayObject);
+			glDrawArrays(GL_TRIANGLES, 0, 3);
+		});
 
-			glBindVertexArray(VAO); // This automatically sets up all the vertex attributes
-
-			glDrawArrays(GL_TRIANGLES, 0, 12); // Only one draw call needed
-
-			// رسم مستطیل با EBO
-// رسم مستطیل با EBO
-			glBindVertexArray(rectangleVAO);
-			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
-			glBindVertexArray(0);
-
-			});
 
 		// Cleanup
-		glDeleteVertexArrays(1, &VAO); // ADDED: Delete VAO
-		glDeleteShader(vertexShader);
-		glDeleteShader(fragmentShader);
+		glDeleteVertexArrays(1, &vertextArrayObject); 
 		glDeleteProgram(shaderProgram);
-		glDeleteBuffers(1, &VBO);
-
+		glDeleteBuffers(1, &vertexBufferObject);
 	}
 	catch (const std::exception& e) {
 		std::cout << "Error: " << e.what() << std::endl;
@@ -164,92 +78,4 @@ int main()
 	}
 
 	return 0;
-}
-
-GLuint CreateVertexShader() {
-	// FIXED: Added aColor attribute
-	const char* vertexShaderSource = R"(
-        #version 330 core
-        in vec3 aPos;
-        in vec3 aColor;
-        out vec3 vertexColor;
-        void main()
-        {
-            gl_Position = vec4(aPos, 1.0);
-            vertexColor = aColor;
-        }
-    )";
-
-	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-	glCompileShader(vertexShader);
-
-	GLint success;
-	char infoLog[512];
-	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-
-	if (!success) {
-		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-		std::cout << "VERTEX SHADER COMPILATION FAILED: " << infoLog << std::endl;
-	}
-	else {
-		std::cout << "Vertex shader compiled successfully!" << std::endl;
-	}
-
-	return vertexShader;
-}
-
-GLuint CreateFragmentShader() {
-	// FIXED: Added vertexColor input
-	const char* fragmentShaderSource = R"(
-        #version 330 core
-        in vec3 vertexColor;
-        out vec4 fragColor;
-        void main()
-        {
-            fragColor = vec4(vertexColor, 1.0); // Use the vertex color instead of fixed color
-        }
-    )";
-
-	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-	glCompileShader(fragmentShader);
-
-	GLint success;
-	char infoLog[512];
-	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-
-	if (!success) {
-		glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-		std::cout << "FRAGMENT SHADER COMPILATION FAILED: " << infoLog << std::endl;
-	}
-	else {
-		std::cout << "Fragment shader compiled successfully!" << std::endl;
-	}
-
-	return fragmentShader;
-}
-
-GLuint CreateShaderProgram(GLuint& vertexShader, GLuint& fragmentShader) {
-	GLuint shaderProgram = glCreateProgram();
-	glAttachShader(shaderProgram, vertexShader);
-	glAttachShader(shaderProgram, fragmentShader);
-	glLinkProgram(shaderProgram);
-
-	GLint success;
-	char infoLog[512];
-	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-	if (!success) {
-		glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-		std::cout << "SHADER PROGRAM LINKING FAILED: " << infoLog << std::endl;
-	}
-	else {
-		std::cout << "Shader program linked successfully!" << std::endl;
-
-		GLint posAttrib = glGetAttribLocation(shaderProgram, "aPos");
-		GLint colorAttrib = glGetAttribLocation(shaderProgram, "aColor");
-		std::cout << "aPos location: " << posAttrib << ", aColor location: " << colorAttrib << std::endl;
-	}
-
-	return shaderProgram;
 }

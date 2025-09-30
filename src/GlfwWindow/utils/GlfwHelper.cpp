@@ -1,7 +1,7 @@
 // GlfwHelper.cpp
 #include "GlfwHelper.h"
 
-GlfwHelper::GlfwHelper() : glfwWindow(nullptr)
+GlfwHelper::GlfwHelper(const char* winTitle) : glfwWindow(nullptr) , m_winTitle(winTitle)
 {
     if (!glfwInit()) {
         throw std::runtime_error("Failed to initialize GLFW");
@@ -11,7 +11,7 @@ GlfwHelper::GlfwHelper() : glfwWindow(nullptr)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    glfwWindow = glfwCreateWindow(1024, 760, "OpenGL Window", nullptr, nullptr);
+    glfwWindow = glfwCreateWindow(800, 800, m_winTitle, nullptr, nullptr);
 
     if (!glfwWindow) {
         glfwTerminate();
