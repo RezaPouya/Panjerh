@@ -31,7 +31,7 @@ int main() {
 			0.0f, -0.5f * float(sqrt(3)) / 3, 0.0f     // Inner down
 		};
 
-		std::vector<GLuint> indicies = {
+		std::vector<GLuint> indices = {
 			 0, 3, 5, // lower left 
 			 3, 2, 4, // lower right 
 			 5, 4, 1 // top 
@@ -41,13 +41,13 @@ int main() {
 
 		std::filesystem::path vertPath = "shaders/Default.vert";
 		std::filesystem::path fragPath = "shaders/Default.frag";
-		auto shader = Shader(vertPath.string().c_str(), fragPath.string().c_str());
+		auto shader = Shader(vertPath.string(), fragPath.string());
 
 		vbo.Bind(GL_ARRAY_BUFFER);
 		vbo.SetData(vertices.data(), vertices.size(), GL_STATIC_DRAW, GL_ARRAY_BUFFER);
 		vao.SetAttribute<GLfloat>(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat) , (void*)0);
 		vao.EnableAttribute(0);
-		ebo.SetData(indicies, GL_STATIC_DRAW);
+		ebo.SetData(indices, GL_STATIC_DRAW);
 
 		vbo.Unbind(GL_ARRAY_BUFFER);
 		vao.Unbind(); // ebo stays bind to vao 

@@ -20,7 +20,7 @@ class Shader
 public:
 	unsigned int ID;
 	// constructor generates the shader on the fly
-	Shader(const char* vertexPath, const char* fragmentPath);
+	Shader(const std::string& vertexPath, const std::string& fragmentPath);
 
 	// activate the shader
 	void Active();
@@ -39,7 +39,7 @@ private:
 	// utility function for checking shader compilation/linking errors.
 	void checkCompileErrors(unsigned int shader, std::string type);
 
-	std::string ReadShaderFile(const char* fileName);
+	std::string ReadShaderFile(const std::string fileName);
 };
 
 #endif

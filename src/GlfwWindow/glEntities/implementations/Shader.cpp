@@ -2,7 +2,7 @@
 
 
 
-Shader::Shader(const char* vertexPath, const char* fragmentPath) {
+Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath) {
 	/*std::ifstream vShaderFile;
 	std::ifstream fShaderFile;*/
 
@@ -59,15 +59,16 @@ void Shader::setFloat(const std::string& name, float value) const
 	glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
 }
 
-std::string Shader::ReadShaderFile(const char* fileName) {
+std::string Shader::ReadShaderFile(const std::string  filePath) {
 	// Check if file exists first
-	if (!std::filesystem::exists(fileName)) {
-		throw std::runtime_error("File not found: " + static_cast<std::string>(fileName));
+	if (!std::filesystem::exists(filePath)) {
+		auto abPath = std::filesystem::absolute(filePath);
+		throw std::runtime_error("File not found: " + filePath + "\n absolute file path: " + abPath.string());
 	}
 
-	std::ifstream in(fileName, std::ios::binary | std::ios::ate);
+	std::ifstream in(filePath, std::ios::binary | std::ios::ate);
 	if (!in) {
-		throw std::runtime_error("Cannot open file: " + static_cast<std::string>(fileName));
+		throw std::runtime_error("Cannot open file: " + static_cast<std::string>(filePath));
 	}
 
 	in.seekg(0, std::ios::end); // go to end of file to Read file size
