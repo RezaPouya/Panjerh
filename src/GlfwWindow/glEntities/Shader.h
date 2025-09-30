@@ -8,7 +8,13 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <cerrno>
+#include <filesystem>
+#include <fstream>
+#include <string>
 
+
+ 
 class Shader
 {
 public:
@@ -17,7 +23,9 @@ public:
 	Shader(const char* vertexPath, const char* fragmentPath);
 
 	// activate the shader
-	void use();
+	void Active();
+
+	void Delete();
 
 	// ------------------------------------------------------------------------
 	// utility uniform functions
@@ -30,6 +38,8 @@ public:
 private:
 	// utility function for checking shader compilation/linking errors.
 	void checkCompileErrors(unsigned int shader, std::string type);
+
+	std::string ReadShaderFile(const char* fileName);
 };
 
 #endif

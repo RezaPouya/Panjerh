@@ -7,10 +7,10 @@
 #include <cstdlib>
 #include <cstdio>
 #include <vector>
-#include "utils/GlfwHelper.h"
+#include "helpers/GlfwHelper.h"
 #include "shaders/BasicShaders.cpp"
 
-int main() {
+int t_2_main() {
 	GlfwHelper glfwHelper("Initial Win");
 
 	try {

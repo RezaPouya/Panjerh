@@ -7,7 +7,7 @@
 #include <cstdlib>
 #include <cstdio>
 #include <vector>
-#include "utils/GlfwHelper.h"
+#include "helpers/GlfwHelper.h"
 #include "shaders/BasicShaders.cpp"
 
 int t_01_main() {
