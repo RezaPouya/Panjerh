@@ -39,9 +39,7 @@ int main() {
 
 		vao.Bind();
 
-		std::filesystem::path vertPath = "shaders/Default.vert";
-		std::filesystem::path fragPath = "shaders/Default.frag";
-		auto shader = Shader(vertPath.string(), fragPath.string());
+		auto shader = Shader("shaders/Default.vert", "shaders/Default.frag");
 
 		vbo.Bind(GL_ARRAY_BUFFER);
 		vbo.SetData(vertices.data(), vertices.size(), GL_STATIC_DRAW, GL_ARRAY_BUFFER);
