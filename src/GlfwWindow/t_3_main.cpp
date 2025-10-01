@@ -29,7 +29,7 @@ std::vector<GLuint> indices = {
 	 5, 4, 1 // top 
 };
 
-int main() {
+int t3_main() {
 
 	GlfwHelper glfwHelper("Initial Win");
 

@@ -1,4 +1,5 @@
 #include "../VertexArrayObject.h"
+#include "../VertexBufferObject.h"
 
 VertexArrayObject::VertexArrayObject(bool shouldBind) : m_ID(0), m_IsBound(false) {
 	glGenVertexArrays(1, &m_ID);
@@ -41,6 +42,18 @@ VertexArrayObject& VertexArrayObject::operator=(VertexArrayObject&& other) noexc
 	}
 	return *this;
 }
+
+void VertexArrayObject::LinkAttrib(VertexBufferObject& VBO, GLuint layout, GLuint numComponents, GLenum type, GLsizeiptr stride, const void* offset)
+{
+	if (!m_IsBound)
+		Bind();
+
+	VBO.Bind();
+	glVertexAttribPointer(layout, numComponents, type, GL_FALSE, stride, offset);
+	glEnableVertexAttribArray(layout);
+	VBO.Unbind();
+}
+
 
 void VertexArrayObject::Bind() {
 	glBindVertexArray(m_ID);

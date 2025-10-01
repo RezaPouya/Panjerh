@@ -12,6 +12,7 @@
     <ClCompile Include="gl_helpers\implementations\VertexArrayObject.cpp" />
     <ClCompile Include="t_3_main.cpp" />
     <ClCompile Include="gl_helpers\implementations\ElementBufferObject.cpp" />
+    <ClCompile Include="t_4_main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="helpers\GlfwHelper.h" />
@@ -23,5 +24,9 @@
   <ItemGroup>
     <None Include="shaders\default.vert" />
     <None Include="shaders\default.frag" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="shaders\shader_01.vert" />
+    <Text Include="shaders\shader_01.frag" />
   </ItemGroup>
 </Project>
