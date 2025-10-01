@@ -13,7 +13,7 @@ private:
 
 public:
 	// Constructor & Destructor
-	VertexArrayObject();
+	VertexArrayObject(bool shouldBind = true);
 	~VertexArrayObject();
 
 	// Delete copy operations

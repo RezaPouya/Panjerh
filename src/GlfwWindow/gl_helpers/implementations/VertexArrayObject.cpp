@@ -1,10 +1,13 @@
 #include "../VertexArrayObject.h"
 
-VertexArrayObject::VertexArrayObject() : m_ID(0), m_IsBound(false) {
+VertexArrayObject::VertexArrayObject(bool shouldBind) : m_ID(0), m_IsBound(false) {
 	glGenVertexArrays(1, &m_ID);
 	if (m_ID == 0) {
 		throw std::runtime_error("Failed to generate Vertex Array Object");
 	}
+
+	if (shouldBind)
+		Bind();
 }
 
 VertexArrayObject::~VertexArrayObject() {

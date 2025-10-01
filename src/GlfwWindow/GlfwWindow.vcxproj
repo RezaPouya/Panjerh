@@ -157,28 +157,28 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="glEntities\implementations\ElementBufferObject.cpp" />
+    <ClCompile Include="gl_helpers\implementations\ElementBufferObject.cpp" />
     <ClCompile Include="t_3_main.cpp" />
     <ClCompile Include="t_2_main.cpp" />
     <ClCompile Include="t_1_main.cpp" />
     <ClCompile Include="shaders\BasicShaders.cpp" />
-    <ClCompile Include="glEntities\implementations\Shader.cpp" />
+    <ClCompile Include="gl_helpers\implementations\Shader.cpp" />
     <ClCompile Include="helpers\GlfwHelper.cpp" />
     <ClCompile Include="t_0_main.cpp" />
     <ClCompile Include="src\gl.c" />
-    <ClCompile Include="glEntities\implementations\VertexBufferObject.cpp" />
-    <ClCompile Include="glEntities\implementations\VertexArrayObject.cpp" />
+    <ClCompile Include="gl_helpers\implementations\VertexBufferObject.cpp" />
+    <ClCompile Include="gl_helpers\implementations\VertexArrayObject.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="glEntities\ElementBufferObject.h" />
-    <ClInclude Include="glEntities\Shader.h" />
+    <ClInclude Include="gl_helpers\ElementBufferObject.h" />
+    <ClInclude Include="gl_helpers\Shader.h" />
     <ClInclude Include="helpers\GlfwHelper.h" />
-    <ClInclude Include="glEntities\VertexBufferObject.h" />
-    <ClInclude Include="glEntities\VertexArrayObject.h" />
+    <ClInclude Include="gl_helpers\VertexBufferObject.h" />
+    <ClInclude Include="gl_helpers\VertexArrayObject.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\Default.frag" />
-    <None Include="shaders\Default.vert" />
+    <None Include="shaders\default.frag" />
+    <None Include="shaders\default.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
