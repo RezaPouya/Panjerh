@@ -416,3 +416,4 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+/src/GlfwWindow/shaders/vetex_01.txt
