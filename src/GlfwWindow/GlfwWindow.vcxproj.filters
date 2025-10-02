@@ -13,6 +13,7 @@
     <ClCompile Include="t_3_main.cpp" />
     <ClCompile Include="gl_helpers\implementations\ElementBufferObject.cpp" />
     <ClCompile Include="t_4_main.cpp" />
+    <ClCompile Include="src\stb.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="helpers\GlfwHelper.h" />
