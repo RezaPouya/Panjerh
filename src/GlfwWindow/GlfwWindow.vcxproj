@@ -159,6 +159,7 @@
   <ItemGroup>
     <ClCompile Include="gl_helpers\implementations\ElementBufferObject.cpp" />
     <ClCompile Include="src\stb.cpp" />
+    <ClCompile Include="t_5_main.cpp" />
     <ClCompile Include="t_4_main.cpp" />
     <ClCompile Include="t_3_main.cpp" />
     <ClCompile Include="t_2_main.cpp" />

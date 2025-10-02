@@ -7,6 +7,7 @@
 #include <cstdlib>
 #include <cstdio>
 #include <vector>
+#include <stb/stb_image.h>
 #include "helpers/GlfwHelper.h"
 #include "shaders/BasicShaders.cpp"
 #include "gl_helpers/Shader.h"
@@ -30,7 +31,7 @@ std::vector<GLuint> indices04 =
 	0, 3, 2 // Lower triangle
 };
 
-int t4_main() {
+int main() {
 
 	GlfwHelper glfwHelper("Initial Win");
 
@@ -39,7 +40,9 @@ int t4_main() {
 		VertexBufferObject vbo;
 		ElementBufferObject ebo;
 
+
 		auto shaderProgram = Shader("shaders/shader_01.vert", "shaders/shader_01.frag");
+		
 
 		vbo.Bind();
 		vbo.SetData(vertices04.data(), vertices04.size(), GL_STATIC_DRAW, GL_ARRAY_BUFFER);
@@ -52,6 +55,17 @@ int t4_main() {
 		
 		// Gets ID of uniform called "scale"
 		GLuint uniID = glGetUniformLocation(shaderProgram.ID, "scale");
+
+		int textureWidht, textureHeight, textureNumberOfColorChannel;
+		const unsigned char* textureData = stbi_load("resources/textures/pop_cat.png" , &textureWidht , &textureHeight , &textureNumberOfColorChannel , 0);
+		GLuint texture;
+		glGenTextures(1, &texture);
+		
+		// activate texture in texture unit ( Open GL has 64 texture unit ) 
+		// texture unit : slot for texture that come toghter as bundle 
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
 
 		glfwHelper.RenderLoop([&shaderProgram, &vao, &ebo , &uniID]() {
 			shaderProgram.Active();
@@ -66,6 +80,7 @@ int t4_main() {
 		vbo.Delete();
 		ebo.Delete();
 		shaderProgram.Delete();
+		glDeleteTextures(1 , &texture);
 	}
 	catch (const std::exception& e) {
 		std::cout << "Error: " << e.what() << std::endl;
