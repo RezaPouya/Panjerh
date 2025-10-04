@@ -182,6 +182,8 @@
   <ItemGroup>
     <None Include="shaders\default.frag" />
     <None Include="shaders\default.vert" />
+    <None Include="shaders\shader_02.frag" />
+    <None Include="shaders\shader_02.vert" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="shaders\shader_01.frag" />

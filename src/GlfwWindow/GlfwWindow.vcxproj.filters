@@ -26,6 +26,8 @@
   <ItemGroup>
     <None Include="shaders\default.vert" />
     <None Include="shaders\default.frag" />
+    <None Include="shaders\shader_02.vert" />
+    <None Include="shaders\shader_02.frag" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="shaders\shader_01.vert" />
