@@ -16,7 +16,7 @@
 #include "gl_helpers/ElementBufferObject.h"
 
 // Vertices coordinates
-std::vector<GLfloat> vertices04 =
+std::vector<GLfloat> vertices05 =
 { //     COORDINATES     /        COLORS      /   TexCoord  //
 	-0.5f, -0.5f, 0.0f,     1.0f, 0.0f, 0.0f,	0.0f, 0.0f, // Lower left corner
 	-0.5f,  0.5f, 0.0f,     0.0f, 1.0f, 0.0f,	0.0f, 1.0f, // Upper left corner
@@ -25,7 +25,7 @@ std::vector<GLfloat> vertices04 =
 };
 
 // Indices for vertices order
-std::vector<GLuint> indices04 =
+std::vector<GLuint> indices05 =
 {
 	0, 2, 1, // Upper triangle
 	0, 3, 2 // Lower triangle
@@ -45,11 +45,11 @@ int main() {
 		
 
 		vbo.Bind();
-		vbo.SetData(vertices04.data(), vertices04.size(), GL_STATIC_DRAW, GL_ARRAY_BUFFER);
+		vbo.SetData(vertices05.data(), vertices05.size(), GL_STATIC_DRAW, GL_ARRAY_BUFFER);
 		vao.LinkAttrib(vbo, 0, 3, GL_FLOAT, 8 * sizeof(GLfloat) , (void*)0);
 		vao.LinkAttrib(vbo, 1, 3, GL_FLOAT, 8 * sizeof(GLfloat) , (void*)(3 * sizeof(GLfloat))); // color 
 		//vao.LinkAttrib(&vbo, 2, 2, GL_FLOAT, 8 * sizeof(GLfloat) , (void*)(6 * sizeof(GLfloat))); // texture
-		ebo.SetData(indices04, GL_STATIC_DRAW);
+		ebo.SetData(indices05, GL_STATIC_DRAW);
 		vbo.Unbind();
 		vao.Unbind(); // ebo stays bind to vao 
 		
