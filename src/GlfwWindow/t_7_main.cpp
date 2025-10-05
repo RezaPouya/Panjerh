@@ -8,6 +8,9 @@
 #include <cstdio>
 #include <vector>
 #include <stb/stb_image.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include "helpers/GlfwHelper.h"
 #include "shaders/BasicShaders.cpp"
 #include "gl_helpers/Shader.h"
@@ -17,7 +20,7 @@
 #include "gl_helpers/GlTexture.h"
 
 
-int t6_main() {
+int main() {
 
 	// Vertices coordinates
 	std::vector<GLfloat> vertices05 =
@@ -35,14 +38,17 @@ int t6_main() {
 		0, 3, 2 // Lower triangle
 	};
 
-	GlfwHelper glfwHelper("Initial Win");
+	const unsigned int width = 800;
+	const unsigned int height = 800;
+
+	GlfwHelper glfwHelper("Leaston 07 - Goding 3D ");
 
 	try {
 		VertexArrayObject vao;
 		VertexBufferObject vbo;
 		ElementBufferObject ebo;
 
-		auto shaderProgram = Shader("shaders/shader_02.vert", "shaders/shader_02.frag");
+		auto shaderProgram = Shader("shaders/shader_03.vert", "shaders/shader_03.frag");
 		
 		vbo.Bind();
 		vbo.SetData(vertices05.data(), vertices05.size(), GL_STATIC_DRAW, GL_ARRAY_BUFFER);
@@ -52,9 +58,9 @@ int t6_main() {
 		ebo.SetData(indices05, GL_STATIC_DRAW);
 		vbo.Unbind();
 		vao.Unbind(); // ebo stays bind to vao 
-		
-		
-		// |NOTE| : square texture with power 2 ( 1x1 , 2x2 , 4x4 , 64x64 , 256x256 , ... ) are better optimized than texture with random dimension. 
+
+		GLuint uniID = glGetUniformLocation(shaderProgram.GetId(), "scale");
+		shaderProgram.Active();
 
 		GlTexture popCatTexture = GlTexture::Builder::FromFile("resources/textures/pop_cat.png")
 			.SetTextureUnit(GL_TEXTURE0)
@@ -64,11 +70,33 @@ int t6_main() {
 			.SetFlipVertical(true)
 			.Build();
 
-		GLuint uniID = glGetUniformLocation(shaderProgram.GetId(), "scale");
 		popCatTexture.SetUniform(shaderProgram, "texture0");
-		glUniform1f(uniID, 1.5f);
+		glUniform1f(uniID, 1.0f);
 
-		glfwHelper.RenderLoop([&vao, &ebo, &uniID ,  &popCatTexture]() {
+		// Variables that help the rotation of the pyramid
+		//float rotation = 0.0f;
+		//double prevTime = glfwGetTime();
+
+		glfwHelper.RenderLoop([&vao, &ebo, &uniID ,  &popCatTexture , &shaderProgram]() {
+
+			glm::mat4 model = glm::mat4(1.0f);
+			glm::mat4 view = glm::mat4(1.0f);
+			glm::mat4 proj = glm::mat4(1.0f);
+
+			view = glm::translate(view, glm::vec3(0.0f, -0.5f, -2.0f));
+			proj = glm::perspective(glm::radians(45.0f), (float)width / height, 0.1f, 100.0f);
+
+			// Outputs the matrices into the Vertex Shader
+			GLuint modelUniformLocation = glGetUniformLocation(shaderProgram.GetId(), "model");
+			glUniformMatrix4fv(modelUniformLocation, 1, GL_FALSE, glm::value_ptr(model));
+
+			GLuint viewUniformLocation = glGetUniformLocation(shaderProgram.GetId(), "view");
+			glUniformMatrix4fv(viewUniformLocation, 1, GL_FALSE, glm::value_ptr(view));
+
+			GLuint projUniformLocation = glGetUniformLocation(shaderProgram.GetId(), "proj");
+			glUniformMatrix4fv(projUniformLocation, 1, GL_FALSE, glm::value_ptr(proj));
+
+
 			//glUniform1f(uniID, 1.5f);
 			popCatTexture.Bind();
 			vao.Bind();

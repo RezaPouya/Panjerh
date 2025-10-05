@@ -160,6 +160,7 @@
     <ClCompile Include="gl_helpers\implementations\ElementBufferObject.cpp" />
     <ClCompile Include="gl_helpers\implementations\GlTexture.cpp" />
     <ClCompile Include="src\stb.cpp" />
+    <ClCompile Include="t_7_main.cpp" />
     <ClCompile Include="t_5_main.cpp" />
     <ClCompile Include="t_4_main.cpp" />
     <ClCompile Include="t_3_main.cpp" />
@@ -185,6 +186,8 @@
   <ItemGroup>
     <None Include="shaders\default.frag" />
     <None Include="shaders\default.vert" />
+    <None Include="shaders\shader_03.frag" />
+    <None Include="shaders\shader_03.vert" />
     <None Include="shaders\shader_02.frag" />
     <None Include="shaders\shader_02.vert" />
   </ItemGroup>

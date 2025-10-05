@@ -17,6 +17,7 @@
     <ClCompile Include="t_5_main.cpp" />
     <ClCompile Include="gl_helpers\implementations\GlTexture.cpp" />
     <ClCompile Include="t_6_main.cpp" />
+    <ClCompile Include="t_7_main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="helpers\GlfwHelper.h" />
@@ -31,6 +32,8 @@
     <None Include="shaders\default.frag" />
     <None Include="shaders\shader_02.vert" />
     <None Include="shaders\shader_02.frag" />
+    <None Include="shaders\shader_03.vert" />
+    <None Include="shaders\shader_03.frag" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="shaders\shader_01.vert" />
