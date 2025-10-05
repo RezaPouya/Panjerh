@@ -23,19 +23,24 @@
 int main() {
 
 	// Vertices coordinates
-	std::vector<GLfloat> vertices05 =
-	{ //     COORDINATES     /        COLORS      /   TextureCoord  // if you give coordinates higher than 1 , texture will be repeated ! 
-		-0.5f, -0.5f, 0.0f,     1.0f, 0.0f, 0.0f,	0.0f, 0.0f, // Lower left corner
-		-0.5f,  0.5f, 0.0f,     0.0f, 1.0f, 0.0f,	0.0f, 1.0f, // Upper left corner
-		 0.5f,  0.5f, 0.0f,     0.0f, 0.0f, 1.0f,	1.0f, 1.0f, // Upper right corner
-		 0.5f, -0.5f, 0.0f,     1.0f, 1.0f, 1.0f,	1.0f, 0.0f  // Lower right corner
+	std::vector<GLfloat> vertices =
+	{ //     COORDINATES     /        COLORS      /   TexCoord  //
+		-0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
+		-0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
+		 0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
+		 0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
+		 0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,	2.5f, 5.0f
 	};
 
 	// Indices for vertices order
-	std::vector<GLuint> indices05 =
+	std::vector<GLuint> indices =
 	{
-		0, 2, 1, // Upper triangle
-		0, 3, 2 // Lower triangle
+		0, 1, 2,
+		0, 2, 3,
+		0, 1, 4,
+		1, 2, 4,
+		2, 3, 4,
+		3, 0, 4
 	};
 
 	const unsigned int width = 800;
@@ -51,18 +56,18 @@ int main() {
 		auto shaderProgram = Shader("shaders/shader_03.vert", "shaders/shader_03.frag");
 		
 		vbo.Bind();
-		vbo.SetData(vertices05.data(), vertices05.size(), GL_STATIC_DRAW, GL_ARRAY_BUFFER);
-		vao.LinkAttrib(vbo, 0, 3, GL_FLOAT, 8 * sizeof(GLfloat) , (void*)0);
-		vao.LinkAttrib(vbo, 1, 3, GL_FLOAT, 8 * sizeof(GLfloat) , (void*)(3 * sizeof(GLfloat))); // color 
-		vao.LinkAttrib(vbo, 2, 2, GL_FLOAT, 8 * sizeof(GLfloat) , (void*)(6 * sizeof(GLfloat))); // texture
-		ebo.SetData(indices05, GL_STATIC_DRAW);
+		vbo.SetData(vertices.data(), vertices.size(), GL_STATIC_DRAW, GL_ARRAY_BUFFER);
+		vao.LinkAttrib(vbo, 0, 3, GL_FLOAT, 8 * sizeof(float), (void*)0);
+		vao.LinkAttrib(vbo, 1, 3, GL_FLOAT, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+		vao.LinkAttrib(vbo, 2, 2, GL_FLOAT, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+		ebo.SetData(indices, GL_STATIC_DRAW);
 		vbo.Unbind();
 		vao.Unbind(); // ebo stays bind to vao 
 
 		GLuint uniID = glGetUniformLocation(shaderProgram.GetId(), "scale");
 		shaderProgram.Active();
 
-		GlTexture popCatTexture = GlTexture::Builder::FromFile("resources/textures/brick.png")
+		GlTexture brickTexture = GlTexture::Builder::FromFile("resources/textures/brick.png")
 			.SetTextureUnit(GL_TEXTURE0)
 			.SetFiltering(GL_LINEAR_MIPMAP_LINEAR, GL_NEAREST)
 			.SetWrapS(GL_MIRRORED_REPEAT)
@@ -70,7 +75,7 @@ int main() {
 			.SetFlipVertical(true)
 			.Build();
 
-		popCatTexture.SetUniform(shaderProgram, "texture0");
+		brickTexture.SetUniform(shaderProgram, "texture0");
 		glUniform1f(uniID, 1.0f);
 
 		// Variables that help the rotation of the pyramid
@@ -81,6 +86,12 @@ int main() {
 		glm::mat4 view = glm::mat4(1.0f);
 		glm::mat4 proj = glm::mat4(1.0f);
 
+		// Variables that help the rotation of the pyramid
+		float rotation = 0.0f;
+		
+
+		// Assigns different transformations to each matrix
+		model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0f, 1.0f, 0.0f));
 		view = glm::translate(view, glm::vec3(0.0f, -0.5f, -2.0f));
 		proj = glm::perspective(glm::radians(45.0f), (float)width / height, 0.1f, 100.0f);
 
@@ -94,14 +105,21 @@ int main() {
 		GLuint projUniformLocation = glGetUniformLocation(shaderProgram.GetId(), "proj");
 		glUniformMatrix4fv(projUniformLocation, 1, GL_FALSE, glm::value_ptr(proj));
 
+		
 
+		// Enables the Depth Buffer
+		glEnable(GL_DEPTH_TEST);
 
-		glfwHelper.RenderLoop([&vao, &ebo, &uniID ,  &popCatTexture , &shaderProgram]() {
+		glfwHelper.RenderLoop([&vao, &ebo, &uniID ,  &brickTexture, &shaderProgram]() {
+			double prevTime = glfwGetTime();
 
 			//glUniform1f(uniID, 1.5f);
-			popCatTexture.Bind();
+			brickTexture.Bind();
 			vao.Bind();
-			ebo.Draw();
+			//ebo.Draw(GL_TRIANGLES);
+			ebo.Draw(GL_TRIANGLES);
+
+
 		});
 
 		// Cleanup
@@ -109,7 +127,7 @@ int main() {
 		vbo.Delete();
 		ebo.Delete();
 		shaderProgram.Delete();
-		popCatTexture.Delete();
+		brickTexture.Delete();
 	}
 	catch (const std::exception& e) {
 		std::cout << "Error: " << e.what() << std::endl;

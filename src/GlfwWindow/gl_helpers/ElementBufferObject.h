@@ -35,7 +35,9 @@ public:
     template<typename T>
     void SetData(const std::vector<T>& indices, GLenum usage) {
         Bind();
+
         m_IndexCount = static_cast<GLsizei>(indices.size());
+        
         glBufferData(GL_ELEMENT_ARRAY_BUFFER,
             indices.size() * sizeof(T),
             indices.data(),
@@ -44,7 +46,12 @@ public:
 
     template<typename T>
     void UpdateData(const std::vector<T>& indices, GLintptr offset) {
-        if (!m_IsBound) Bind();
+
+        if (!m_IsBound) 
+            Bind();
+
+        m_IndexCount = static_cast<GLsizei>(indices.size());
+
         glBufferSubData(GL_ELEMENT_ARRAY_BUFFER,
             offset,
             indices.size() * sizeof(T),
