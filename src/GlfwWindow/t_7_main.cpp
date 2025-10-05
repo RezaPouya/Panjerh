@@ -62,7 +62,7 @@ int main() {
 		GLuint uniID = glGetUniformLocation(shaderProgram.GetId(), "scale");
 		shaderProgram.Active();
 
-		GlTexture popCatTexture = GlTexture::Builder::FromFile("resources/textures/pop_cat.png")
+		GlTexture popCatTexture = GlTexture::Builder::FromFile("resources/textures/brick.png")
 			.SetTextureUnit(GL_TEXTURE0)
 			.SetFiltering(GL_LINEAR_MIPMAP_LINEAR, GL_NEAREST)
 			.SetWrapS(GL_MIRRORED_REPEAT)
@@ -77,25 +77,26 @@ int main() {
 		//float rotation = 0.0f;
 		//double prevTime = glfwGetTime();
 
+		glm::mat4 model = glm::mat4(1.0f);
+		glm::mat4 view = glm::mat4(1.0f);
+		glm::mat4 proj = glm::mat4(1.0f);
+
+		view = glm::translate(view, glm::vec3(0.0f, -0.5f, -2.0f));
+		proj = glm::perspective(glm::radians(45.0f), (float)width / height, 0.1f, 100.0f);
+
+		// Outputs the matrices into the Vertex Shader
+		GLuint modelUniformLocation = glGetUniformLocation(shaderProgram.GetId(), "model");
+		glUniformMatrix4fv(modelUniformLocation, 1, GL_FALSE, glm::value_ptr(model));
+
+		GLuint viewUniformLocation = glGetUniformLocation(shaderProgram.GetId(), "view");
+		glUniformMatrix4fv(viewUniformLocation, 1, GL_FALSE, glm::value_ptr(view));
+
+		GLuint projUniformLocation = glGetUniformLocation(shaderProgram.GetId(), "proj");
+		glUniformMatrix4fv(projUniformLocation, 1, GL_FALSE, glm::value_ptr(proj));
+
+
+
 		glfwHelper.RenderLoop([&vao, &ebo, &uniID ,  &popCatTexture , &shaderProgram]() {
-
-			glm::mat4 model = glm::mat4(1.0f);
-			glm::mat4 view = glm::mat4(1.0f);
-			glm::mat4 proj = glm::mat4(1.0f);
-
-			view = glm::translate(view, glm::vec3(0.0f, -0.5f, -2.0f));
-			proj = glm::perspective(glm::radians(45.0f), (float)width / height, 0.1f, 100.0f);
-
-			// Outputs the matrices into the Vertex Shader
-			GLuint modelUniformLocation = glGetUniformLocation(shaderProgram.GetId(), "model");
-			glUniformMatrix4fv(modelUniformLocation, 1, GL_FALSE, glm::value_ptr(model));
-
-			GLuint viewUniformLocation = glGetUniformLocation(shaderProgram.GetId(), "view");
-			glUniformMatrix4fv(viewUniformLocation, 1, GL_FALSE, glm::value_ptr(view));
-
-			GLuint projUniformLocation = glGetUniformLocation(shaderProgram.GetId(), "proj");
-			glUniformMatrix4fv(projUniformLocation, 1, GL_FALSE, glm::value_ptr(proj));
-
 
 			//glUniform1f(uniID, 1.5f);
 			popCatTexture.Bind();
