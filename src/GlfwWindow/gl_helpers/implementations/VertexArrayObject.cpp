@@ -43,7 +43,7 @@ VertexArrayObject& VertexArrayObject::operator=(VertexArrayObject&& other) noexc
 	return *this;
 }
 
-void VertexArrayObject::LinkAttrib(VertexBufferObject& VBO, GLuint layout, GLuint numComponents, GLenum type, GLsizeiptr stride, const void* offset)
+void VertexArrayObject::LinkAttrib(VertexBufferObject& VBO, GLuint layout, GLuint numComponents, GLenum type, GLsizei stride, const void* offset)
 {
 	if (!m_IsBound)
 		Bind();

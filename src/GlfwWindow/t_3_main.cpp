@@ -14,22 +14,24 @@
 #include "gl_helpers/VertexBufferObject.h"
 #include "gl_helpers/ElementBufferObject.h"
 
-std::vector<GLfloat> vertices = {
+
+
+int t3_main() {
+
+	std::vector<GLfloat> vertices = {
 	-0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f, // Lower left corner
 	0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,  // Lower right corner
 	0.0f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f, // Upper corner
 	-0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f, // Inner left
 	0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f,  // Inner right
 	0.0f, -0.5f * float(sqrt(3)) / 3, 0.0f     // Inner down
-};
+	};
 
-std::vector<GLuint> indices = {
-	 0, 3, 5, // lower left 
-	 3, 2, 4, // lower right 
-	 5, 4, 1 // top 
-};
-
-int t3_main() {
+	std::vector<GLuint> indices = {
+		 0, 3, 5, // lower left 
+		 3, 2, 4, // lower right 
+		 5, 4, 1 // top 
+	};
 
 	GlfwHelper glfwHelper("Initial Win");
 

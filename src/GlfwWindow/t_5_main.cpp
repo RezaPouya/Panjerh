@@ -15,23 +15,24 @@
 #include "gl_helpers/VertexBufferObject.h"
 #include "gl_helpers/ElementBufferObject.h"
 
-// Vertices coordinates
-std::vector<GLfloat> vertices05 =
-{ //     COORDINATES     /        COLORS      /   TextureCoord  // if you give coordinates higher than 1 , texture will be repeated ! 
-	-0.5f, -0.5f, 0.0f,     1.0f, 0.0f, 0.0f,	0.0f, 0.0f, // Lower left corner
-	-0.5f,  0.5f, 0.0f,     0.0f, 1.0f, 0.0f,	0.0f, 1.0f, // Upper left corner
-	 0.5f,  0.5f, 0.0f,     0.0f, 0.0f, 1.0f,	1.0f, 1.0f, // Upper right corner
-	 0.5f, -0.5f, 0.0f,     1.0f, 1.0f, 1.0f,	1.0f, 0.0f  // Lower right corner
-};
 
-// Indices for vertices order
-std::vector<GLuint> indices05 =
-{
-	0, 2, 1, // Upper triangle
-	0, 3, 2 // Lower triangle
-};
+int t5_main() {
 
-int main() {
+	// Vertices coordinates
+	std::vector<GLfloat> vertices05 =
+	{ //     COORDINATES     /        COLORS      /   TextureCoord  // if you give coordinates higher than 1 , texture will be repeated ! 
+		-0.5f, -0.5f, 0.0f,     1.0f, 0.0f, 0.0f,	0.0f, 0.0f, // Lower left corner
+		-0.5f,  0.5f, 0.0f,     0.0f, 1.0f, 0.0f,	0.0f, 1.0f, // Upper left corner
+		 0.5f,  0.5f, 0.0f,     0.0f, 0.0f, 1.0f,	1.0f, 1.0f, // Upper right corner
+		 0.5f, -0.5f, 0.0f,     1.0f, 1.0f, 1.0f,	1.0f, 0.0f  // Lower right corner
+	};
+
+	// Indices for vertices order
+	std::vector<GLuint> indices05 =
+	{
+		0, 2, 1, // Upper triangle
+		0, 3, 2 // Lower triangle
+	};
 
 	GlfwHelper glfwHelper("Initial Win");
 
@@ -91,8 +92,8 @@ int main() {
 		glBindTexture(GL_TEXTURE_2D, 0);
 
 		// Gets ID of uniform called "scale"
-		GLuint uniID = glGetUniformLocation(shaderProgram.ID, "scale");
-		GLuint unitTexture0Id = glGetUniformLocation(shaderProgram.ID, "texture0");
+		GLuint uniID = glGetUniformLocation(shaderProgram.GetId(), "scale");
+		GLuint unitTexture0Id = glGetUniformLocation(shaderProgram.GetId(), "texture0");
 		shaderProgram.Active();
 		
 		glUniform1i(unitTexture0Id, 0);

@@ -42,7 +42,7 @@ public:
 		glVertexAttribPointer(index, size, type, normalized, stride, pointer);
 	}
 
-	void LinkAttrib(VertexBufferObject& VBO, GLuint layout, GLuint numComponents, GLenum type, GLsizeiptr stride, const void* pointer);
+	void LinkAttrib(VertexBufferObject& VBO, GLuint layout, GLuint numComponents, GLenum type, GLsizei stride, const void* pointer);
 
 	// Enable/disable vertex attributes
 	void EnableAttribute(GLuint index);

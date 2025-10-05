@@ -158,6 +158,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="gl_helpers\implementations\ElementBufferObject.cpp" />
+    <ClCompile Include="gl_helpers\implementations\GlTexture.cpp" />
     <ClCompile Include="src\stb.cpp" />
     <ClCompile Include="t_5_main.cpp" />
     <ClCompile Include="t_4_main.cpp" />
@@ -171,9 +172,11 @@
     <ClCompile Include="src\gl.c" />
     <ClCompile Include="gl_helpers\implementations\VertexBufferObject.cpp" />
     <ClCompile Include="gl_helpers\implementations\VertexArrayObject.cpp" />
+    <ClCompile Include="t_6_main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gl_helpers\ElementBufferObject.h" />
+    <ClInclude Include="gl_helpers\GlTexture.h" />
     <ClInclude Include="gl_helpers\Shader.h" />
     <ClInclude Include="helpers\GlfwHelper.h" />
     <ClInclude Include="gl_helpers\VertexBufferObject.h" />
