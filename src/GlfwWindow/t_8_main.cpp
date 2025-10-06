@@ -18,8 +18,11 @@
 #include "gl_helpers/GlEbo.h"
 #include "gl_helpers/GlTexture.h"
 
-// goind 3d //
-int t7_main() {
+/// <summary>
+/// camera
+/// </summary>
+/// <returns></returns>
+int main() {
 
 	std::vector<GLfloat> vertices =
 	{ //     COORDINATES     /        COLORS      /   TexCoord  //

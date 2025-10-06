@@ -18,6 +18,8 @@
     <ClCompile Include="gl_helpers\implementations\GlTexture.cpp" />
     <ClCompile Include="t_6_main.cpp" />
     <ClCompile Include="t_7_main.cpp" />
+    <ClCompile Include="gl_helpers\implementations\GlCamera.cpp" />
+    <ClCompile Include="t_8_main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="helpers\GlfwHelper.h" />
@@ -26,6 +28,7 @@
     <ClInclude Include="gl_helpers\GlVao.h" />
     <ClInclude Include="gl_helpers\GlEbo.h" />
     <ClInclude Include="gl_helpers\GlTexture.h" />
+    <ClInclude Include="gl_helpers\GlCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\default.vert" />

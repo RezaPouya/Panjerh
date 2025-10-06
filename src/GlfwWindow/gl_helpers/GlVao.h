@@ -1,5 +1,5 @@
-#ifndef VERTEX_ARRAY_OBJECT_H
-#define VERTEX_ARRAY_OBJECT_H
+#ifndef GL_VAO_H
+#define GL_VAO_H
 
 #pragma once
 #include <glad/gl.h>

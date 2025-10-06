@@ -1,5 +1,5 @@
-#ifndef SHADER_H
-#define SHADER_H
+#ifndef GL_SHADER_H
+#define GL_SHADER_H
 
 #pragma once
 

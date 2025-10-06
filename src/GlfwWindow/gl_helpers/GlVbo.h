@@ -1,5 +1,5 @@
-#ifndef VERTEX_BUFFER_OBJECT_H
-#define VERTEX_BUFFER_OBJECT_H
+#ifndef GL_VBO_H
+#define GL_VBO_H
 
 #include <glad/gl.h>
 #include <vector>
