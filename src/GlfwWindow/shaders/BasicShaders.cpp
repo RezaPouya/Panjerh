@@ -78,7 +78,7 @@ public:
 			std::cout << "SHADER PROGRAM LINKING FAILED: " << infoLog << std::endl;
 		}
 		else {
-			std::cout << "Shader program linked successfully!" << std::endl;
+			std::cout << "GlShader program linked successfully!" << std::endl;
 
 			GLint posAttrib = glGetAttribLocation(shaderProgram, "aPos");
 			GLint colorAttrib = glGetAttribLocation(shaderProgram, "aColor");

@@ -1,5 +1,5 @@
 #include "../GlTexture.h"
-#include "../Shader.h"
+#include "../GlShader.h"
 #include <stb/stb_image.h>
 #include <iostream>
 #include <memory>
@@ -134,7 +134,7 @@ void GlTexture::UpdateData(const void* data, GLenum format, GLenum type) {
     glTexSubImage2D(m_texture_type, 0, 0, 0, m_width, m_height, format, type, data);
 }
 
-void GlTexture::SetUniform(Shader& shader, const std::string& uniform_name) const {
+void GlTexture::SetUniform(GlShader& shader, const std::string& uniform_name) const {
     shader.Active();
     GLint texture_unit_index = m_texture_unit - GL_TEXTURE0;
     glUniform1i(glGetUniformLocation(shader.GetId(), uniform_name.c_str()), texture_unit_index);

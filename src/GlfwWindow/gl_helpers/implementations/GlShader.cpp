@@ -1,13 +1,13 @@
-#include "../Shader.h"
+#include "../GlShader.h"
 
 
 
-Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath) {
+GlShader::GlShader(const std::string& vertexPath, const std::string& fragmentPath) {
 	/*std::ifstream vShaderFile;
 	std::ifstream fShaderFile;*/
 
-	auto vertexCode = Shader::ReadShaderFile(vertexPath);
-	auto fragmentCode = Shader::ReadShaderFile(fragmentPath);
+	auto vertexCode = GlShader::ReadShaderFile(vertexPath);
+	auto fragmentCode = GlShader::ReadShaderFile(fragmentPath);
 
 	const char* vShaderCode = vertexCode.c_str();
 	const char* fShaderCode = fragmentCode.c_str();
@@ -18,7 +18,7 @@ Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath) {
 	glShaderSource(vertex, 1, &vShaderCode, NULL);
 	glCompileShader(vertex);
 	checkCompileErrors(vertex, "VERTEX");
-	// fragment Shader
+	// fragment GlShader
 	fragment = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragment, 1, &fShaderCode, NULL);
 	glCompileShader(fragment);
@@ -34,32 +34,32 @@ Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath) {
 	glDeleteShader(fragment);
 }
 
-void Shader::Active()
+void GlShader::Active()
 {
 	glUseProgram(ID);
 }
 
-void Shader::Delete()
+void GlShader::Delete()
 {
 	glDeleteProgram(ID);
 }
 
-void Shader::setBool(const std::string& name, bool value) const
+void GlShader::setBool(const std::string& name, bool value) const
 {
 	glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)value);
 }
 
-void Shader::setInt(const std::string& name, int value) const
+void GlShader::setInt(const std::string& name, int value) const
 {
 	glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
 }
 
-void Shader::setFloat(const std::string& name, float value) const
+void GlShader::setFloat(const std::string& name, float value) const
 {
 	glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
 }
 
-std::string Shader::ReadShaderFile(const std::string  filePath) {
+std::string GlShader::ReadShaderFile(const std::string  filePath) {
 	// Check if file exists first
 	if (!std::filesystem::exists(filePath)) {
 		auto abPath = std::filesystem::absolute(filePath);
@@ -80,7 +80,7 @@ std::string Shader::ReadShaderFile(const std::string  filePath) {
 }
 
 
-void Shader::checkCompileErrors(unsigned int shader, std::string type) {
+void GlShader::checkCompileErrors(unsigned int shader, std::string type) {
 	int success;
 	char infoLog[1024];
 	if (type != "PROGRAM")
@@ -103,6 +103,6 @@ void Shader::checkCompileErrors(unsigned int shader, std::string type) {
 	}
 }
 
-const unsigned int Shader::GetId() const {
+const unsigned int GlShader::GetId() const {
 	return ID;
 }

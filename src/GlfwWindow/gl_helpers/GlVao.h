@@ -5,25 +5,28 @@
 #include <glad/gl.h>
 #include <vector>
 #include <stdexcept>
-#include "VertexBufferObject.h"
+#include "GlVbo.h"
 
-class VertexArrayObject {
+/// <summary>
+/// Wrapper for Vertex Array Object 
+/// </summary>
+class GlVao {
 private:
 	GLuint m_ID;
 	bool m_IsBound;
 
 public:
 	// Constructor & Destructor
-	VertexArrayObject(bool shouldBind = true);
-	~VertexArrayObject();
+	GlVao(bool shouldBind = true);
+	~GlVao();
 
 	// Delete copy operations
-	VertexArrayObject(const VertexArrayObject&) = delete;
-	VertexArrayObject& operator=(const VertexArrayObject&) = delete;
+	GlVao(const GlVao&) = delete;
+	GlVao& operator=(const GlVao&) = delete;
 
 	// Move operations
-	VertexArrayObject(VertexArrayObject&& other) noexcept;
-	VertexArrayObject& operator=(VertexArrayObject&& other) noexcept;
+	GlVao(GlVao&& other) noexcept;
+	GlVao& operator=(GlVao&& other) noexcept;
 
 	// Core functionality
 	void Bind();
@@ -42,7 +45,7 @@ public:
 		glVertexAttribPointer(index, size, type, normalized, stride, pointer);
 	}
 
-	void LinkAttrib(VertexBufferObject& VBO, GLuint layout, GLuint numComponents, GLenum type, GLsizei stride, const void* pointer);
+	void LinkAttrib(GlVbo& VBO, GLuint layout, GLuint numComponents, GLenum type, GLsizei stride, const void* pointer);
 
 	// Enable/disable vertex attributes
 	void EnableAttribute(GLuint index);

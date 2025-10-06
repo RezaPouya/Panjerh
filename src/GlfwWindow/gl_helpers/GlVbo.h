@@ -5,22 +5,25 @@
 #include <vector>
 #include <stdexcept>
 
-class VertexBufferObject {
+/// <summary>
+/// wrapper Vertex Buffer Object 
+/// </summary>
+class GlVbo {
 private:
 	GLuint m_ID;
 	bool m_IsBound;
 
 public:
-	VertexBufferObject();
-	~VertexBufferObject();
+	GlVbo();
+	~GlVbo();
 	
 	// Delete copy constructor/assignment (OpenGL objects can't be copied)
-	VertexBufferObject(const VertexBufferObject&) = delete;
-	VertexBufferObject& operator=(const VertexBufferObject&) = delete;
+	GlVbo(const GlVbo&) = delete;
+	GlVbo& operator=(const GlVbo&) = delete;
 
 	// Move constructor
-	VertexBufferObject(VertexBufferObject&& other) noexcept;
-	VertexBufferObject& operator=(VertexBufferObject&& other) noexcept;
+	GlVbo(GlVbo&& other) noexcept;
+	GlVbo& operator=(GlVbo&& other) noexcept;
 
 	void Bind(GLenum target = GL_ARRAY_BUFFER);
 	void Unbind(GLenum target = GL_ARRAY_BUFFER);

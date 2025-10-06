@@ -9,10 +9,10 @@
 #include <vector>
 #include "helpers/GlfwHelper.h"
 #include "shaders/BasicShaders.cpp"
-#include "gl_helpers/Shader.h"
-#include "gl_helpers/VertexArrayObject.h"
-#include "gl_helpers/VertexBufferObject.h"
-#include "gl_helpers/ElementBufferObject.h"
+#include "gl_helpers/GlShader.h"
+#include "gl_helpers/GlVao.h"
+#include "gl_helpers/GlVbo.h"
+#include "gl_helpers/GlEbo.h"
 
 int t4_main() {
 
@@ -35,11 +35,11 @@ int t4_main() {
 	GlfwHelper glfwHelper("Initial Win");
 
 	try {
-		VertexArrayObject vao;
-		VertexBufferObject vbo;
-		ElementBufferObject ebo;
+		GlVao vao;
+		GlVbo vbo;
+		GlEbo ebo;
 
-		auto shaderProgram = Shader("shaders/shader_01.vert", "shaders/shader_01.frag");
+		auto shaderProgram = GlShader("shaders/shader_01.vert", "shaders/shader_01.frag");
 
 		vbo.Bind();
 		vbo.SetData(vertices04.data(), vertices04.size(), GL_STATIC_DRAW, GL_ARRAY_BUFFER);
@@ -55,7 +55,7 @@ int t4_main() {
 
 		glfwHelper.RenderLoop([&shaderProgram, &vao, &ebo , &uniID]() {
 			shaderProgram.Active();
-			// Assigns a value to the uniform; NOTE: Must always be done after activating the Shader Program
+			// Assigns a value to the uniform; NOTE: Must always be done after activating the GlShader Program
 			glUniform1f(uniID, 1.5f);
 			vao.Bind();
 			ebo.Draw();

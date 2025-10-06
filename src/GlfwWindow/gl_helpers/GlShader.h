@@ -14,12 +14,14 @@
 #include <string>
 
 
- 
-class Shader
+/// <summary>
+/// Wrapper for OpenGL shader 
+/// </summary>
+class GlShader
 {
 public:
 	// constructor generates the shader on the fly
-	Shader(const std::string& vertexPath, const std::string& fragmentPath);
+	GlShader(const std::string& vertexPath, const std::string& fragmentPath);
 
 	// activate the shader
 	void Active();

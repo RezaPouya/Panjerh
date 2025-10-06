@@ -10,10 +10,10 @@
 #include <stb/stb_image.h>
 #include "helpers/GlfwHelper.h"
 #include "shaders/BasicShaders.cpp"
-#include "gl_helpers/Shader.h"
-#include "gl_helpers/VertexArrayObject.h"
-#include "gl_helpers/VertexBufferObject.h"
-#include "gl_helpers/ElementBufferObject.h"
+#include "gl_helpers/GlShader.h"
+#include "gl_helpers/GlVao.h"
+#include "gl_helpers/GlVbo.h"
+#include "gl_helpers/GlEbo.h"
 #include "gl_helpers/GlTexture.h"
 
 
@@ -38,11 +38,11 @@ int t6_main() {
 	GlfwHelper glfwHelper("Initial Win");
 
 	try {
-		VertexArrayObject vao;
-		VertexBufferObject vbo;
-		ElementBufferObject ebo;
+		GlVao vao;
+		GlVbo vbo;
+		GlEbo ebo;
 
-		auto shaderProgram = Shader("shaders/shader_02.vert", "shaders/shader_02.frag");
+		auto shaderProgram = GlShader("shaders/shader_02.vert", "shaders/shader_02.frag");
 		
 		vbo.Bind();
 		vbo.SetData(vertices05.data(), vertices05.size(), GL_STATIC_DRAW, GL_ARRAY_BUFFER);

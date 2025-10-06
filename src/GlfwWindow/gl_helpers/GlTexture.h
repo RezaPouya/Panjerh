@@ -9,7 +9,7 @@
 #include <stdexcept>
 
 // Forward declaration
-class Shader;
+class GlShader;
  
 class GlTexture {
    
@@ -89,7 +89,7 @@ public:
     void UpdateData(const void* data, GLenum format = GL_RGBA, GLenum type = GL_UNSIGNED_BYTE);
 
     // Set texture uniform in shader
-    void SetUniform(Shader& shader, const std::string& uniform_name) const;
+    void SetUniform(GlShader& shader, const std::string& uniform_name) const;
 
     // Getters
     GLuint GetID() const { return m_id; }

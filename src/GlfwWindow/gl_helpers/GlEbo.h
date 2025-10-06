@@ -1,12 +1,15 @@
-#ifndef ELEMENT_BUFFER_OBJECT_H
-#define ELEMENT_BUFFER_OBJECT_H
+#ifndef GL_Ebo_H
+#define GL_Ebo_H
 
 #pragma once
 #include <glad/gl.h>
 #include <vector>
 #include <stdexcept>
 
-class ElementBufferObject {
+/// <summary>
+/// Wrapper for OpenGl Element Buffer Object  
+/// </summary>
+class GlEbo {
 private:
     GLuint m_ID;
     bool m_IsBound;
@@ -15,16 +18,16 @@ private:
 
 public:
     // Constructor & Destructor
-    ElementBufferObject();
-    ~ElementBufferObject();
+    GlEbo();
+    ~GlEbo();
 
     // Delete copy operations
-    ElementBufferObject(const ElementBufferObject&) = delete;
-    ElementBufferObject& operator=(const ElementBufferObject&) = delete;
+    GlEbo(const GlEbo&) = delete;
+    GlEbo& operator=(const GlEbo&) = delete;
 
     // Move operations
-    ElementBufferObject(ElementBufferObject&& other) noexcept;
-    ElementBufferObject& operator=(ElementBufferObject&& other) noexcept;
+    GlEbo(GlEbo&& other) noexcept;
+    GlEbo& operator=(GlEbo&& other) noexcept;
 
     // Core functionality
     void Bind();

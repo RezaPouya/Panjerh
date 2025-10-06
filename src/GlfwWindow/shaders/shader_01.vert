@@ -2,7 +2,7 @@
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aColor;
 
-out vec3 vertexColor; // Outputs the color for the Fragment Shader
+out vec3 vertexColor; // Outputs the color for the Fragment GlShader
 
 // Controls the scale of the vertices
 uniform float scale;

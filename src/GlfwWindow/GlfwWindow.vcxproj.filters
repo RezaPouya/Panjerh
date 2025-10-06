@@ -4,14 +4,14 @@
     <ClCompile Include="src\gl.c" />
     <ClCompile Include="t_0_main.cpp" />
     <ClCompile Include="helpers\GlfwHelper.cpp" />
-    <ClCompile Include="gl_helpers\implementations\Shader.cpp" />
+    <ClCompile Include="gl_helpers\implementations\GlShader.cpp" />
     <ClCompile Include="shaders\BasicShaders.cpp" />
     <ClCompile Include="t_1_main.cpp" />
     <ClCompile Include="t_2_main.cpp" />
-    <ClCompile Include="gl_helpers\implementations\VertexBufferObject.cpp" />
-    <ClCompile Include="gl_helpers\implementations\VertexArrayObject.cpp" />
+    <ClCompile Include="gl_helpers\implementations\GlVbo.cpp" />
+    <ClCompile Include="gl_helpers\implementations\GlVao.cpp" />
     <ClCompile Include="t_3_main.cpp" />
-    <ClCompile Include="gl_helpers\implementations\ElementBufferObject.cpp" />
+    <ClCompile Include="gl_helpers\implementations\GlEbo.cpp" />
     <ClCompile Include="t_4_main.cpp" />
     <ClCompile Include="src\stb.cpp" />
     <ClCompile Include="t_5_main.cpp" />
@@ -21,10 +21,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="helpers\GlfwHelper.h" />
-    <ClInclude Include="gl_helpers\Shader.h" />
-    <ClInclude Include="gl_helpers\VertexBufferObject.h" />
-    <ClInclude Include="gl_helpers\VertexArrayObject.h" />
-    <ClInclude Include="gl_helpers\ElementBufferObject.h" />
+    <ClInclude Include="gl_helpers\GlShader.h" />
+    <ClInclude Include="gl_helpers\GlVbo.h" />
+    <ClInclude Include="gl_helpers\GlVao.h" />
+    <ClInclude Include="gl_helpers\GlEbo.h" />
     <ClInclude Include="gl_helpers\GlTexture.h" />
   </ItemGroup>
   <ItemGroup>

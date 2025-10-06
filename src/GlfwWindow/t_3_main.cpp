@@ -9,10 +9,10 @@
 #include <vector>
 #include "helpers/GlfwHelper.h"
 #include "shaders/BasicShaders.cpp"
-#include "gl_helpers/Shader.h"
-#include "gl_helpers/VertexArrayObject.h"
-#include "gl_helpers/VertexBufferObject.h"
-#include "gl_helpers/ElementBufferObject.h"
+#include "gl_helpers/GlShader.h"
+#include "gl_helpers/GlVao.h"
+#include "gl_helpers/GlVbo.h"
+#include "gl_helpers/GlEbo.h"
 
 
 
@@ -36,11 +36,11 @@ int t3_main() {
 	GlfwHelper glfwHelper("Initial Win");
 
 	try {
-		VertexArrayObject vao;
-		VertexBufferObject vbo;
-		ElementBufferObject ebo;
+		GlVao vao;
+		GlVbo vbo;
+		GlEbo ebo;
 
-		auto shader = Shader("shaders/default.vert", "shaders/default.frag");
+		auto shader = GlShader("shaders/default.vert", "shaders/default.frag");
 
 		vbo.Bind();
 		vbo.SetData(vertices.data(), vertices.size(), GL_STATIC_DRAW, GL_ARRAY_BUFFER);
