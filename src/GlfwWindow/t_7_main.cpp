@@ -22,14 +22,13 @@
 
 int main() {
 
-	// Vertices coordinates
 	std::vector<GLfloat> vertices =
 	{ //     COORDINATES     /        COLORS      /   TexCoord  //
-		-0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
-		-0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
-		 0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
-		 0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
-		 0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,	2.5f, 5.0f
+		-0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,  // bottom-left
+		-0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 1.0f,  // top-left  
+		 0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	1.0f, 1.0f,  // top-right
+		 0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	1.0f, 0.0f,  // bottom-right
+		 0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,	0.5f, 1.0f   // center-top
 	};
 
 	// Indices for vertices order
@@ -63,9 +62,10 @@ int main() {
 		ebo.SetData(indices, GL_STATIC_DRAW);
 		vbo.Unbind();
 		vao.Unbind(); // ebo stays bind to vao 
+		//ebo.Unbind();
 
-		GLuint uniID = glGetUniformLocation(shaderProgram.GetId(), "scale");
-		shaderProgram.Active();
+	
+		//shaderProgram.Active();
 
 		GlTexture brickTexture = GlTexture::Builder::FromFile("resources/textures/brick.png")
 			.SetTextureUnit(GL_TEXTURE0)
@@ -76,19 +76,15 @@ int main() {
 			.Build();
 
 		brickTexture.SetUniform(shaderProgram, "texture0");
-		glUniform1f(uniID, 1.0f);
+		GLuint shaderScaleUnitId = glGetUniformLocation(shaderProgram.GetId(), "scale");
+		glUniform1f(shaderScaleUnitId, 1.0f);
 
 		// Variables that help the rotation of the pyramid
-		//float rotation = 0.0f;
-		//double prevTime = glfwGetTime();
+		float rotation = 0.0f;
 
 		glm::mat4 model = glm::mat4(1.0f);
 		glm::mat4 view = glm::mat4(1.0f);
 		glm::mat4 proj = glm::mat4(1.0f);
-
-		// Variables that help the rotation of the pyramid
-		float rotation = 0.0f;
-		
 
 		// Assigns different transformations to each matrix
 		model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -105,21 +101,18 @@ int main() {
 		GLuint projUniformLocation = glGetUniformLocation(shaderProgram.GetId(), "proj");
 		glUniformMatrix4fv(projUniformLocation, 1, GL_FALSE, glm::value_ptr(proj));
 
-		
-
 		// Enables the Depth Buffer
 		glEnable(GL_DEPTH_TEST);
 
-		glfwHelper.RenderLoop([&vao, &ebo, &uniID ,  &brickTexture, &shaderProgram]() {
-			double prevTime = glfwGetTime();
+		double prevTime = glfwGetTime();
 
-			//glUniform1f(uniID, 1.5f);
+		glfwHelper.RenderLoop([&]() {
+			
+			shaderProgram.Active();
+			double prevTime = glfwGetTime();
 			brickTexture.Bind();
 			vao.Bind();
-			//ebo.Draw(GL_TRIANGLES);
 			ebo.Draw(GL_TRIANGLES);
-
-
 		});
 
 		// Cleanup

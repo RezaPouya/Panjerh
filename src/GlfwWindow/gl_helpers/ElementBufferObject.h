@@ -11,9 +11,7 @@ private:
     GLuint m_ID;
     bool m_IsBound;
     GLsizei m_IndexCount;
-    // Core functionality
-    void Bind();
-    void Unbind();
+
 
 public:
     // Constructor & Destructor
@@ -28,6 +26,9 @@ public:
     ElementBufferObject(ElementBufferObject&& other) noexcept;
     ElementBufferObject& operator=(ElementBufferObject&& other) noexcept;
 
+    // Core functionality
+    void Bind();
+    void Unbind();
 
     void Delete();
 
