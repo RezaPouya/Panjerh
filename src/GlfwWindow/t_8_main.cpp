@@ -50,6 +50,10 @@ int main() {
 
 	GlfwHelper glfwHelper("Leaston 07 - Camera");
 
+	int nrAttributes;
+	glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttributes);
+	std::cout << "Maximum nr of vertex attributes supported: " << nrAttributes << std::endl;
+
 	try {
 		GlVao vao;
 		GlVbo vbo;
