@@ -23,28 +23,26 @@ void GlCamera::Matrix(float FOVdeg, float nearPlane, float farPlane, GlShader& s
 	glUniformMatrix4fv(glGetUniformLocation(shader.GetId(), uniform), 1, GL_FALSE, glm::value_ptr(projection * view));
 }
 
-
-
 void GlCamera::Inputs(GLFWwindow* window)
 {
 	// Handles key inputs
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		Position += speed * Orientation;
+		Position += (speed/100) * Orientation;
 	
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		Position += speed * -glm::normalize(glm::cross(Orientation, Up));
+		Position += (speed / 100) * -glm::normalize(glm::cross(Orientation, Up));
 	
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		Position += speed * -Orientation;
+		Position += (speed / 100) * -Orientation;
 	
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		Position += speed * glm::normalize(glm::cross(Orientation, Up));
+		Position += (speed / 100) * glm::normalize(glm::cross(Orientation, Up));
 	
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-		Position += speed * Up;
+		Position += (speed / 100) * Up;
 	
 	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
-		Position += speed * -Up;
+		Position += (speed / 100) * -Up;
 	
 	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
 		speed = 0.4f;

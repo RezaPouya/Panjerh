@@ -82,3 +82,9 @@ void GlfwHelper::framebuffer_size_callback(GLFWwindow* window, int width, int he
 {
     glViewport(0, 0, width, height);
 }
+
+
+GLFWwindow* GlfwHelper::GetWindow()
+{
+    return this->glfwWindow;
+}

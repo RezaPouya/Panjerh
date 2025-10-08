@@ -17,6 +17,7 @@
 #include "gl_helpers/GlVbo.h"
 #include "gl_helpers/GlEbo.h"
 #include "gl_helpers/GlTexture.h"
+#include "gl_helpers/GlCamera.h"
 
 /// <summary>
 /// camera
@@ -47,14 +48,14 @@ int main() {
 	const unsigned int width = 800;
 	const unsigned int height = 800;
 
-	GlfwHelper glfwHelper("Leaston 07 - Goding 3D ");
+	GlfwHelper glfwHelper("Leaston 07 - Camera");
 
 	try {
 		GlVao vao;
 		GlVbo vbo;
 		GlEbo ebo;
 
-		auto shaderProgram = GlShader("shaders/shader_03.vert", "shaders/shader_03.frag");
+		auto shaderProgram = GlShader("shaders/shader_04.vert", "shaders/shader_04.frag");
 		
 		vbo.Bind();
 		vbo.SetData(vertices.data(), vertices.size(), GL_STATIC_DRAW, GL_ARRAY_BUFFER);
@@ -88,16 +89,25 @@ int main() {
 		float rotation = 0.0f;
 		double prevTime = glfwGetTime();
 
+		// Creates camera object
+		GlCamera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f));
+
 		glfwHelper.RenderLoop([&]() {
 			
 			shaderProgram.Active();
 
-			double crntTime = glfwGetTime();
+			// Handles camera inputs
+			camera.Inputs(glfwHelper.GetWindow());
+
+			// Updates and exports the camera matrix to the Vertex Shader
+			camera.Matrix(45.0f, 0.1f, 100.0f, shaderProgram, "camMatrix");
+
+			/*double crntTime = glfwGetTime();
 			if (crntTime - prevTime >= 1 / 60)
 			{
 				rotation += 0.01f;
 				prevTime = crntTime;
-			}
+			}*/
 
 			// ----------------------------------------------------------------
 

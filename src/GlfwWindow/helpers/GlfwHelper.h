@@ -16,6 +16,7 @@ public:
     GlfwHelper(const char* title) ;
     ~GlfwHelper();
     void RenderLoop(const std::function<void()>& func);
+    GLFWwindow* GetWindow();
 
 private:
     const char* m_winTitle;
