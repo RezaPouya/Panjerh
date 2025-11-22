@@ -13,7 +13,9 @@ GLuint CreateVertexShader();
 GLuint CreateFragmentShader();
 GLuint CreateShaderProgram(GLuint& vertexShader, GLuint& fragmentShader);
 
-int t_00_main()
+
+int main()
+//int t_00_main()
 {
 	try {
 		GlfwHelper glfwHelper("Open Gl Win");

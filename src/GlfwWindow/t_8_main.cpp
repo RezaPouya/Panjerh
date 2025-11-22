@@ -23,7 +23,8 @@
 /// camera
 /// </summary>
 /// <returns></returns>
-int main() {
+int t08_main(){
+//int main() {
 
 	std::vector<GLfloat> vertices =
 	{ //     COORDINATES     /        COLORS      /   TexCoord  //
